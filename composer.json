@@ -1,6 +1,7 @@
 {
     "name": "dvarner/ascendphp",
     "description": "Ascend is a PHP Framework",
+    "license": "MIT",
     "authors": [
         {
             "name": "David Varner",
