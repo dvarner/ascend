@@ -86,3 +86,17 @@ php ascend db:migration # runs migrationss
 
 * ab (apache benchmark)
 * phpmatrics
+
+
+#################################################################################
+# Todo
+
+* Add another define variable for namespace slashes vs file path slashes
+* 
+
+
+
+
+
+
+
