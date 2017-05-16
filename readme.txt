@@ -13,7 +13,7 @@
 #################################################################################
 # Start builtin php web server for dev
 
-* \projects\php7\php -S localhost:8080 bootstrap.php
+* php -S localhost bootstrap.php
 
 #################################################################################
 # Composer
