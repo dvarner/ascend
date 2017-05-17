@@ -13,80 +13,83 @@ class BootStrap
      * Holds all the configurations variables
      */
     private static $_config;
-	private static $_dbPdo;
-	private static $_db;
-	
+    private static $_dbPdo;
+    private static $_db;
+
     /**
      * Initializes bootstrap config
      */
     public static function init()
     {
-		self::autoloader();
+        self::autoloader();
         self::initConfig();
-		
+
+        /*
 		$whoops = new \Whoops\Run;
 		$whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
 		$whoops->register();
-		
-		if (self::existConfig('db')) {
-			require_once PATH_FRAMEWORK . 'DatabasePDO.php';
-			require_once PATH_FRAMEWORK . 'Database.php';
-			require_once PATH_FRAMEWORK . 'Model.php';
-			self::initDBPDO();
-			self::initDB();
-		}
-		
-		if (self::isCommandLine()) {
-			require_once PATH_FRAMEWORK . 'CommandLine.php';
-			CommandLine::init();
-			exit;
-		}
-    }
-	
-	public static function autoloader() {
-		spl_autoload_register(function ($name) {
-			
-			// App\Model\User
-			if (false === strpos($name, 'App' . '\\' . 'Model')) {
-				$path = strtolower($name);
-			} else {
-				$path = $name;
-			}
-			
-			$DS = DIRECTORY_SEPARATOR;
+		*/
 
-			$path = str_replace('App' . '\\' . 'Models' . '\\', 'app' . $DS . 'models' . $DS, $path);
-			
-			$path = str_replace('app' . $DS . 'controller' . $DS, 'app' . $DS . 'controllers' . $DS, $path);
-			// if($path == 'app\controller\controller') { $path = 'app\controllers\controller'; }
-			
-			$path = str_replace('app' . $DS . 'controller' . $DS, 'app' . $DS . 'controllers' . $DS, $path);
-			// if($path == 'app\controller\controller') { $path = 'app\controllers\controller'; }
-			
-			$path = str_replace('ascend' . $DS, 'fw' . $DS, $path);
-			// if($path == 'mimic\basecontroller') { $path = 'fw\basecontroller'; }
-            
-			if (file_exists(PATH_PROJECT . $path . '.php')) {
-				require_once PATH_PROJECT . $path . '.php';
-			} else {
-				
-				$path = str_replace('fw' . $DS, 'fw' . $DS . 'feature' . $DS, $path);
-				
-				if (file_exists(PATH_PROJECT . $path . '.php')) {
-					echo PATH_PROJECT . $path . '.php' . RET;
-					require_once PATH_PROJECT . $path . '.php';
-				} else {
-					echo '<pre>';
-					echo 'Name: ' . $name . RET;
-					echo 'Count not find "' . PATH_PROJECT . $path . '.php"' . RET;
-					var_dump(debug_backtrace());
-					exit;
-				}
-			}
-			
-			// throw new Exception("Unable to load $name.");
-		});
-	}
+        if (self::existConfig('db')) {
+            require_once PATH_FRAMEWORK . 'DatabasePDO.php';
+            require_once PATH_FRAMEWORK . 'Database.php';
+            require_once PATH_FRAMEWORK . 'Model.php';
+            self::initDBPDO();
+            self::initDB();
+        }
+
+        if (self::isCommandLine()) {
+            require_once PATH_FRAMEWORK . 'CommandLine.php';
+            CommandLine::init();
+            exit;
+        }
+    }
+
+    public static function autoloader()
+    {
+        spl_autoload_register(function ($name) {
+
+            // App\Model\User
+            if (false === strpos($name, 'App' . '\\' . 'Model')) {
+                $path = strtolower($name);
+            } else {
+                $path = $name;
+            }
+
+            $DS = DIRECTORY_SEPARATOR;
+
+            $path = str_replace('App' . '\\' . 'Models' . '\\', 'app' . $DS . 'models' . $DS, $path);
+
+            $path = str_replace('app' . $DS . 'controller' . $DS, 'app' . $DS . 'controllers' . $DS, $path);
+            // if($path == 'app\controller\controller') { $path = 'app\controllers\controller'; }
+
+            $path = str_replace('app' . $DS . 'controller' . $DS, 'app' . $DS . 'controllers' . $DS, $path);
+            // if($path == 'app\controller\controller') { $path = 'app\controllers\controller'; }
+
+            $path = str_replace('ascend' . $DS, 'fw' . $DS, $path);
+            // if($path == 'mimic\basecontroller') { $path = 'fw\basecontroller'; }
+
+            if (file_exists(PATH_PROJECT . $path . '.php')) {
+                require_once PATH_PROJECT . $path . '.php';
+            } else {
+
+                $path = str_replace('fw' . $DS, 'fw' . $DS . 'feature' . $DS, $path);
+
+                if (file_exists(PATH_PROJECT . $path . '.php')) {
+                    echo PATH_PROJECT . $path . '.php' . RET;
+                    require_once PATH_PROJECT . $path . '.php';
+                } else {
+                    echo '<pre>';
+                    echo 'Name: ' . $name . RET;
+                    echo 'Count not find "' . PATH_PROJECT . $path . '.php"' . RET;
+                    var_dump(debug_backtrace());
+                    exit;
+                }
+            }
+
+            // throw new Exception("Unable to load $name.");
+        });
+    }
 
     /**
      * Initializes bootstrap config
@@ -107,22 +110,23 @@ class BootStrap
             $_config['domain_full'] = ($_config['https'] === true ? 'https' : 'http') . '://www.' . $_config['domain'];
 
             static::$_config = $_config;
-			
-			self::setDebug();
-			self::wwwRedirect();
-			self::setTimeZone();
+
+            self::setDebug();
+            self::wwwRedirect();
+            self::setTimeZone();
         }
     }
-	
-	public static function existConfig($field) {
-		$reqConfig = array('maint', 'dev', 'debug', 'showScriptRunTime', 'https', 'domain', 'sub_folder', 'timezone', 'lock', 'lock_user', 'lock_pass', 'set_time_out');
-		
-		if ( in_array($field, $reqConfig) ){
-			die('Variable required! "' . $field . '"');
-		} else {
-			return isset(static::$_config[$field]);
-		}
-	}
+
+    public static function existConfig($field)
+    {
+        $reqConfig = array('maint', 'dev', 'debug', 'showScriptRunTime', 'https', 'domain', 'sub_folder', 'timezone', 'lock', 'lock_user', 'lock_pass', 'set_time_out');
+
+        if (in_array($field, $reqConfig)) {
+            die('Variable required! "' . $field . '"');
+        } else {
+            return isset(static::$_config[$field]);
+        }
+    }
 
     /**
      * Gets configuration variables for use
@@ -140,9 +144,9 @@ class BootStrap
                 if (isset(static::$_config[$field])) {
                     return static::$_config[$field];
                 } else {
-					die('Variable not set static::$_config[' . $field . ']');
+                    die('Variable not set static::$_config[' . $field . ']');
                 }
-			} else {
+            } else {
                 $exp = explode('.', $field);
                 if (count($exp) == 2) {
                     if (isset(static::$_config[$exp[0]][$exp[1]])) {
@@ -169,24 +173,29 @@ class BootStrap
             }
         }
     }
-	
-	public static function initDBPDO() {
-		self::$_dbPdo = new DatabasePDO;
-	}
-	
-	public static function getDBPDO() {
-		return self::$_dbPdo;
-	}	
-	
-	public static function initDB() {
-		self::$_db = new Database;
-	}
-	
-	public static function getDB() {
-		return self::$_db;
-	}
-	
-	public static function isCommandLine() {
+
+    public static function initDBPDO()
+    {
+        self::$_dbPdo = new DatabasePDO;
+    }
+
+    public static function getDBPDO()
+    {
+        return self::$_dbPdo;
+    }
+
+    public static function initDB()
+    {
+        self::$_db = new Database;
+    }
+
+    public static function getDB()
+    {
+        return self::$_db;
+    }
+
+    public static function isCommandLine()
+    {
         if (PHP_SAPI == 'cli') {
             $value = true;
             set_time_limit(0);
@@ -204,7 +213,8 @@ class BootStrap
      *
      * @param array $_config Array of configuration variables from bootstrap.php, tpl/[tpl]/config.php
      */
-    private static function setDebug() {
+    private static function setDebug()
+    {
         if (isset(self::$_config['debug']) && self::$_config['debug'] === true) {
             error_reporting(E_ALL);
             ini_set('display_errors', 1);
@@ -213,18 +223,20 @@ class BootStrap
             ini_set('display_errors', 0);
         }
     }
-    
-    private static function wwwRedirect() {
-		if (!self::isCommandLine()) {
-			$domain = $_SERVER['HTTP_HOST'];
-			if($domain == self::$_config['domain'] ) {
-				header("location: " . self::$_config['domain_full'] );
-				exit;
-			}
-		}
+
+    private static function wwwRedirect()
+    {
+        if (!self::isCommandLine()) {
+            $domain = $_SERVER['HTTP_HOST'];
+            if ($domain == self::$_config['domain']) {
+                header("location: " . self::$_config['domain_full']);
+                exit;
+            }
+        }
     }
-	
-    private static function setTimeZone() {
+
+    private static function setTimeZone()
+    {
         date_default_timezone_set(self::$_config['timezone']);
     }
 }
