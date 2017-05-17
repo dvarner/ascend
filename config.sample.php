@@ -10,7 +10,6 @@ define('PATH_CONTROLLERS',  PATH_APP . 'controllers/');
 define('PATH_MODELS',     	PATH_APP . 'models/');
 define('PATH_VIEWS',      	PATH_APP . 'views/');
 
-define('SLASH', '\\'); // For Namespace
 define('RET', PHP_EOL);
 define('TAB', "\t");
 
@@ -28,28 +27,28 @@ $_config = [
     'lock' => false, // Turns on HTTP authentication headers; mostly for locking a site but allowing only specific access
     'lock_user' => '', //
     'lock_pass' => '',
+	'set_time_out' => 60,
     // *** Optional Configurations *** //
     'password_cost' => 11, 
-    'db' =>
-    [
-        'local' => 
-        [
+    'db' => array(
+        'local' => array(
             'name' => 'local',
             'type' => 'mysql',
-            'hostname' => 'localhost:3311',
+            'hostname' => 'localhost',
             'database' => '',
             'username' => '',
             'password' => '',
-            // 'pre' => '',
-        ]
-    ],
-    'upload' =>
-    [
+        )
+    ),
+	'role' => array(
+		'default' => 4,
+	),
+    'upload' => array(
         'path' => PATH_STORAGE,
         'max' => 1024*1024*10,
-        'types' => [],
-    ],
-    'robotstxt' => [
+        'types' => array(),
+    ),
+    'robotstxt' => array(
         'access' => false
-    ],
+    ),
 ];

@@ -45,7 +45,7 @@ class CommandLine
 		require_once $path . $value;
 		
 		$className = str_replace('.php', '', $value);
-		$className = SLASH . 'Ascend' . SLASH . 'CommandLine' . SLASH . $className;
+		$className = '\\' . 'Ascend' . '\\' . 'CommandLine' . '\\' . $className;
 		
 		$n = new $className;
 		
