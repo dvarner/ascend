@@ -18,6 +18,7 @@ class User extends Model
 	protected $structure = array(
 		'id'		=> 'int unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY',
 		'role_id'	=> 'int unsigned NOT NULL',
+		'email' 	=> 'varchar(255) NOT NULL',
 		'username' 	=> 'varchar(255) NOT NULL',
 		'password' 	=> 'varchar(255) NOT NULL',
 		'confirm'	=> 'varchar(255) NOT NULL',

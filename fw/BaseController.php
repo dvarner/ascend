@@ -42,7 +42,7 @@ class BaseController
 		// GET /api/photos
 		
 		$modelName = ucfirst($this->model);
-		$modelNamespace = SLASH . 'App' . SLASH . 'Models' .SLASH . $modelName;
+		$modelNamespace = '\\' . 'App' . '\\' . 'Models' . '\\' . $modelName;
 		
 		return $modelNamespace::all();
 	}
@@ -65,7 +65,7 @@ class BaseController
 		// POST /api/photos
 		
 		$modelName = ucfirst($this->model);
-		$modelNamespace = SLASH . 'App' . SLASH . 'Models' .SLASH . $modelName;
+		$modelNamespace = '\\' . 'App' . '\\' . 'Models' .'\\' . $modelName;
 		
 		$model = new $modelNamespace;
 		
@@ -97,7 +97,7 @@ class BaseController
 		// GET /api/photos/{id}
 		
 		$modelName = ucfirst($this->model);
-		$modelNamespace = SLASH . 'App' . SLASH . 'Models' .SLASH . $modelName;
+		$modelNamespace = '\\' . 'App' . '\\' . 'Models' .'\\' . $modelName;
 		
 		return $modelNamespace::where('id', '=', $id)->first();
 	}
@@ -121,7 +121,7 @@ class BaseController
 		// PUT /api/photos/{id}
 		
 		$modelName = ucfirst($this->model);
-		$modelNamespace = SLASH . 'App' . SLASH . 'Models' .SLASH . $modelName;
+		$modelNamespace = '\\' . 'App' . '\\' . 'Models' .'\\' . $modelName;
 		
 		$model = new $modelNamespace;
 		$model->id = $id;
@@ -153,7 +153,7 @@ class BaseController
 		// DELETE /api/photos/{id}
 				
 		$modelName = ucfirst($this->model);
-		$modelNamespace = SLASH . 'App' . SLASH . 'Models' .SLASH . $modelName;
+		$modelNamespace = '\\' . 'App' . '\\' . 'Models' .'\\' . $modelName;
 		
 		$model = new $modelNamespace;
 		$model->id = $id;

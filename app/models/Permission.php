@@ -21,4 +21,8 @@ class Permission extends Model
 		'name' 		=> 'varchar(255) NOT NULL',
 		'detail' 	=> 'varchar(255) NOT NULL',
 	);
+	
+	protected $seed = array(
+		array('slug' => 'user', 'name' => 'Allows managing of users', 'detail' => 'Allows managing of users'), // 1
+	);
 }

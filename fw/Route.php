@@ -97,16 +97,22 @@ class Route {
         echo '</center>';
         exit;
     }
+	
 	public static function maint() {
         if (BS::getConfig('maint') === true) {
             require_once PATH_VIEWS . 'maint.php';
             exit;
         }
     }
+	
     public static function lock(){
         if (BS::getConfig('lock') === true) {
             require_once PATH_VIEWS . 'maint.php';
         }
+    }
+	
+	public static function denied(){
+		self::view('/access-denied', 'access-denied'); // @todo make this into a function
     }
 	
 	// Takes path, checks for {?}, and changes {?} to values from uri.
@@ -146,7 +152,7 @@ class Route {
 				list($class, $func) = explode('@', $call);
 				require_once PATH_CONTROLLERS . $class . '.php';
 				$call = str_replace('@', '::', $call);
-				$class = 'App' . SLASH . 'Controller' . SLASH . $class;
+				$class = 'App' . '\\' . 'Controller' . '\\' . $class;
 				$n = new $class;
 				
 				$result = null;
@@ -173,7 +179,7 @@ class Route {
 							$defClassName = $parameter->getType();
 							$defVariable = $parameter->getName();
 							if (is_object($defClassName)) {
-								$nam = SLASH . $defClassName;
+								$nam = '\\' . $defClassName;
 								$inst = new $nam;
 								$result = $n->$func($inst);
 							}

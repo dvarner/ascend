@@ -26,7 +26,7 @@ class DatabaseMigrate extends _CommandLineAbstract {
 		foreach($models AS $model) {
 			
 			require_once PATH_MODELS . $model . '.php';
-			$class = SLASH . 'App' . SLASH . 'Models' . SLASH . $model;
+			$class = '\\' . 'App' . '\\' . 'Models' . '\\' . $model;
 			$n = new $class;
 			
 			$tableName = strtolower($model) . 's';

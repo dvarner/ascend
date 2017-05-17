@@ -21,7 +21,7 @@ class UserManagement {
 		
 		$error = array();
 		foreach ($requiredModels AS $modelName) {
-			$modelPath = SLASH . 'Acend' . SLASH . $modelName;
+			$modelPath = '\\' . 'Acend' . '\\' . $modelName;
 			if (!class_exists($modelPath)) {
 				$error[] = 'Model Required: ' . $modelName;
 			}

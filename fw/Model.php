@@ -71,8 +71,8 @@ class Model {
 	
 	public function save() {
 		
-		$modelNamespace = SLASH . get_called_class();
-		$e = explode(SLASH, $modelNamespace);
+		$modelNamespace = '\\' . get_called_class();
+		$e = explode('\\', $modelNamespace);
 		$modelNameSingular = strtolower($e[count($e)-1]);
 		$modelName = $modelNameSingular . 's';
 		
@@ -116,8 +116,8 @@ class Model {
 	
 	public function delete($id) {
 		
-		$modelNamespace = SLASH . get_called_class();
-		$e = explode(SLASH, $modelNamespace);
+		$modelNamespace = '\\' . get_called_class();
+		$e = explode('\\', $modelNamespace);
 		$modelNameSingular = strtolower($e[count($e)-1]);
 		$modelName = $modelNameSingular . 's';
 		

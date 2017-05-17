@@ -24,4 +24,11 @@ class RolePermission extends Model
 		'put'				=> 'tinyint unsigned NOT NULL',
 		'delete'			=> 'tinyint unsigned NOT NULL',
 	);
+	
+	protected $seed = array(
+		array('role_id' => 1, 'permission_id' => 1, 'get' => 1, 'post' => 1, 'put' => 1, 'delete' => 1),
+		array('role_id' => 2, 'permission_id' => 1, 'get' => 1, 'post' => 1, 'put' => 1, 'delete' => 0),
+		array('role_id' => 3, 'permission_id' => 1, 'get' => 1, 'post' => 1, 'put' => 0, 'delete' => 0),
+		array('role_id' => 4, 'permission_id' => 1, 'get' => 1, 'post' => 0, 'put' => 0, 'delete' => 0),
+	);
 }

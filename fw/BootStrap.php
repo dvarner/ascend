@@ -24,7 +24,14 @@ class BootStrap
 		self::autoloader();
         self::initConfig();
 		
+		$whoops = new \Whoops\Run;
+		$whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
+		$whoops->register();
+		
 		if (self::existConfig('db')) {
+			require_once PATH_FRAMEWORK . 'DatabasePDO.php';
+			require_once PATH_FRAMEWORK . 'Database.php';
+			require_once PATH_FRAMEWORK . 'Model.php';
 			self::initDBPDO();
 			self::initDB();
 		}
@@ -40,28 +47,30 @@ class BootStrap
 		spl_autoload_register(function ($name) {
 			
 			// App\Model\User
-			if (false === strpos($name, 'App' . SLASH . 'Model')) {
+			if (false === strpos($name, 'App' . '\\' . 'Model')) {
 				$path = strtolower($name);
 			} else {
 				$path = $name;
 			}
+			
+			$DS = DIRECTORY_SEPARATOR;
 
-			$path = str_replace('App' . SLASH . 'Models' . SLASH, 'app' . SLASH . 'models' . SLASH, $path);
+			$path = str_replace('App' . '\\' . 'Models' . '\\', 'app' . $DS . 'models' . $DS, $path);
 			
-			$path = str_replace('app' . SLASH . 'controller' . SLASH, 'app' . SLASH . 'controllers' . SLASH, $path);
+			$path = str_replace('app' . $DS . 'controller' . $DS, 'app' . $DS . 'controllers' . $DS, $path);
 			// if($path == 'app\controller\controller') { $path = 'app\controllers\controller'; }
 			
-			$path = str_replace('app' . SLASH . 'controller' . SLASH, 'app' . SLASH . 'controllers' . SLASH, $path);
+			$path = str_replace('app' . $DS . 'controller' . $DS, 'app' . $DS . 'controllers' . $DS, $path);
 			// if($path == 'app\controller\controller') { $path = 'app\controllers\controller'; }
 			
-			$path = str_replace('ascend' . SLASH, 'fw' . SLASH, $path);
+			$path = str_replace('ascend' . $DS, 'fw' . $DS, $path);
 			// if($path == 'mimic\basecontroller') { $path = 'fw\basecontroller'; }
             
 			if (file_exists(PATH_PROJECT . $path . '.php')) {
 				require_once PATH_PROJECT . $path . '.php';
 			} else {
 				
-				$path = str_replace('fw' . SLASH, 'fw' . SLASH . 'feature' . SLASH, $path);
+				$path = str_replace('fw' . $DS, 'fw' . $DS . 'feature' . $DS, $path);
 				
 				if (file_exists(PATH_PROJECT . $path . '.php')) {
 					echo PATH_PROJECT . $path . '.php' . RET;
@@ -106,7 +115,7 @@ class BootStrap
     }
 	
 	public static function existConfig($field) {
-		$reqConfig = array('maint', 'dev', 'debug', 'showScriptRunTime', 'https', 'domain', 'sub_folder', 'timezone', 'lock', 'lock_user', 'lock_pass');
+		$reqConfig = array('maint', 'dev', 'debug', 'showScriptRunTime', 'https', 'domain', 'sub_folder', 'timezone', 'lock', 'lock_user', 'lock_pass', 'set_time_out');
 		
 		if ( in_array($field, $reqConfig) ){
 			die('Variable required! "' . $field . '"');
@@ -167,7 +176,7 @@ class BootStrap
 	
 	public static function getDBPDO() {
 		return self::$_dbPdo;
-	}
+	}	
 	
 	public static function initDB() {
 		self::$_db = new Database;
@@ -183,7 +192,7 @@ class BootStrap
             set_time_limit(0);
         } else {
             $value = false;
-            set_time_limit(60);
+            set_time_limit(self::$_config['set_time_out']);
         }
         // define('IS_CRON', $value);
         // define('IS_COMMAND_LINE', $value);
@@ -208,7 +217,7 @@ class BootStrap
     private static function wwwRedirect() {
 		if (!self::isCommandLine()) {
 			$domain = $_SERVER['HTTP_HOST'];
-			if($domain == self::$_config['domain'] ){
+			if($domain == self::$_config['domain'] ) {
 				header("location: " . self::$_config['domain_full'] );
 				exit;
 			}

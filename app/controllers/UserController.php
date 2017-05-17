@@ -1,9 +1,9 @@
 <?php namespace App\Controller;
 
 // use Ascend\Database as DB;
-use App\Models\User;
-use Ascend\Request;
-use Ascend\Route;
+// use App\Models\User;
+// use Ascend\Request;
+// use Ascend\Route;
 
 class UserController extends Controller {
 	

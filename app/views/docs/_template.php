@@ -18,6 +18,7 @@
 		<div class="col-md-3">
 			
 			<p><a href="#intro">Intro</a></p>
+			<p><a href="#repos">Repos</a></p>
 			<p><a href="#min-req">Minimum Requirements</a></p>
 			<p><a href="#install">Install</a></p>
 			<p><a href="#local-dev">Local Development</a></p>
@@ -31,11 +32,27 @@
 			
 			<div class="row">
 				<p><a class="doc-header" name="intro">Intro</a></p>
+				
+				<p>Ascend PHP Framework is about taking programmers development to the next level; to Ascend.</p>
+				<p>Ascend has been developed to provide similar simplistic development to Laravel but
+				 with a slimer base line of code.</p>
+				<p>Ascend provides regularily used development requests and automate them for rapid development such as
+				 REST API's, permissions for users, and more.</p>
+				<p>Ascend eventually wants to make conversions for moving to and from frameworks as easy as possible.</p>
+				
 				<p><u>Benchmark</u></p>
 				<p>Laravel = 300ish</p>
 				<p>Phalcon = 1400ish</p>
 				<p>Ascend = 1200ish</p>
 				<p>Ascend speed tested as 3x Laravel but only slightly less in speed than phalcon</p>
+			</div>
+			
+			<div class="row">
+				<p><a class="doc-header" name="repos">Repos</a></p>
+				<p><a href="https://packagist.org/packages/dvarner/ascendphp">https://packagist.org/packages/dvarner/ascendphp</a></p>
+				<p><a href="https://github.com/dvarner/ascendphp">https://github.com/dvarner/ascendphp</a></p>
+				<br />
+				
 			</div>
 			
 			<div class="row">
