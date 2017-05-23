@@ -1,36 +1,14 @@
-<html>
-<head>
-<title>User Index</title>
+<?php
 
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+// Used ob instead of HEREDOC because code highlighting can occur and no issues with single/double quotes
 
-</head>
-<body>
+$title = 'User Index';
 
-<div class="container">
+ob_start();
+?>
 	<h2>User list (loaded)</h2>
 	
 	<p><a href="/user/create">Create</a></p>
-	<?php /*
-	<table class="table">
-	<thead>
-	<tr>
-	<th class="col-md-1">Options</th>
-	<th class="col-md-11">User</th>
-	</tr>
-	</thead>
-	<tbody>
-	<?php
-	foreach ($users AS $user) {
-		echo '<tr>';
-		echo '<td><a href="/user/' . $user['id'] . '/edit">Edit</a></td>';
-		echo '<td>' . $user['username'] . '</td>';
-		echo '</tr>';
-	}
-	?>
-	</tbody>
-	</table>
-	*/ ?>
 	
 	<h2>User list (ajax)</h2>
 	<table class="table">
@@ -41,13 +19,27 @@
 	</tr>
 	</thead>
 	<tbody data="user">
+        <tr>
+        <td>
+            <div class="col-md-6">
+                <a href="/user/[[id]]/edit">Edit</a>
+            </div>
+            <div class="col-md-6">
+                <form class="formUserDelete" method="delete" action="/api/user/[[id]]">
+                <input type="hidden" name="id" value="[[id]]" />
+                <input type="submit" value="Delete" />
+                </form>
+            </div>
+        </td>
+        <td>[[username]]</td>
+        </tr>
 	</tbody>
 	</table>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script>
+<?php
+$container = ob_get_contents();
+ob_end_clean();
+ob_start();
+?>
 jQuery.each( [ "put", "delete" ], function( i, method ) {
   jQuery[ method ] = function( url, data, callback, type ) {
     if ( jQuery.isFunction( data ) ) {
@@ -66,6 +58,11 @@ jQuery.each( [ "put", "delete" ], function( i, method ) {
   };
 });
 $(function(){
+
+    var ascendUser = ascendForm('user');
+    ascendUser.formGet();
+
+    /*
 	$.get('/api/user', function(d) {
 		$.each(d, function(i, v) {
 			html = '';
@@ -96,11 +93,13 @@ $(function(){
 				document.location = "/user";
 			/*} else {
 				console.log(d);
-			}*/
+			}* /
 		}, 'json');
 	});
+    */
 });
-</script>
+<?php
+$javascript = ob_get_contents();
+ob_end_clean();
 
-</body>
-</html>
+require_once __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR .'_template.php';

@@ -1,13 +1,12 @@
-<html>
-<head>
-<title>User Edit</title>
+<?php
 
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+// Used ob instead of HEREDOC because code highlighting can occur and no issues with single/double quotes
 
-</head>
-<body>
+$title = 'User Edit';
 
-<div class="container">
+ob_start();
+$content = ob_get_contents();
+?>
 	<h2>User Edit</h2>
 	
 	<form id="formUserEdit" method="put" action="/api/user/<?=$id; ?>">
@@ -18,11 +17,11 @@
 	  </div>
 	  <button type="submit" class="btn btn-default">Submit</button>
 	</form>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script>
+<?php
+$container = ob_get_contents();
+ob_end_clean();
+ob_start();
+?>
 jQuery.each( [ "put", "delete" ], function( i, method ) {
   jQuery[ method ] = function( url, data, callback, type ) {
     if ( jQuery.isFunction( data ) ) {
@@ -57,7 +56,8 @@ $(function(){
 		}, 'json');
 	});
 });
-</script>
+<?php
+$javascript = ob_get_contents();
+ob_end_clean();
 
-</body>
-</html>
+require_once __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR .'_template.php';

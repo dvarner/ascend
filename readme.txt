@@ -91,8 +91,9 @@ php ascend db:migration # runs migrationss
 #################################################################################
 # Todo
 
-* Add another define variable for namespace slashes vs file path slashes
-* 
+* Changes dies to trigger_error()
+* Create a standard way for converting field types; example password. Possible do based off validation?
+
 
 
 

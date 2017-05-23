@@ -83,7 +83,7 @@ class Route {
 			http_response_code(200);
 			header('Content-Type: text/html');
 			require_once $pathView;
-			if (BS::getConfig('showScriptRunTime')) { echo Debug::displayLogTime(); }
+			if (BS::getConfig('debug_show_script_run_time')) { echo Debug::displayLogTime(); }
 			exit;
 		}
 	}
@@ -145,15 +145,28 @@ class Route {
 	private static function getControllerByUri($path, $call, $uri, $dynVar, $dynVal) {
 		if (is_callable($call)) {
 			echo $call();
-			if (BS::getConfig('showScriptRunTime')) { echo Debug::displayLogTime(); }
+			if (BS::getConfig('debug_show_script_run_time')) { echo Debug::displayLogTime(); }
 		} else {
 			if (false !== strpos($call, '@')) {
 				
 				list($class, $func) = explode('@', $call);
-				require_once PATH_CONTROLLERS . $class . '.php';
+				// require_once PATH_CONTROLLERS . $class . '.php';
+				if (file_exists(PATH_CONTROLLERS . $class . '.php')) {
+					$classNamespace = 'App' . '\\' . 'Controller' . '\\' . $class;
+				} else {
+					die($class . ' failed to load within Route::getControllerByUri()');
+					/** REMOVED: Dont want controllers in features or fw which are stuck the way they are. Give devs power to change.
+					if (file_exists(PATH_FRAMEWORK . 'feature' . DIRECTORY_SEPARATOR . $class . '.php')) {
+						$classNamespace = 'Ascend' . '\\' . 'Feature' . '\\' . $class;
+					} else {
+						die($class . ' failed to load within Route::getControllerByUri()');
+					}
+					*/
+				}
+				
+				$n = new $classNamespace;
+				
 				$call = str_replace('@', '::', $call);
-				$class = 'App' . '\\' . 'Controller' . '\\' . $class;
-				$n = new $class;
 				
 				$result = null;
 				if (isset($dynVar[1]) && count($dynVar[1]) == 1) {
@@ -167,25 +180,33 @@ class Route {
 				} elseif (isset($dynVar[1]) && count($dynVar[1]) > 4) {
 					trigger_error('Route does not suppore more than 4 dynamic variable. Fix in Route::getControllerByUri!', E_USER_ERROR);
 				} else {
-					
-					$rClass = new \ReflectionClass($class);
+					$rClass = new \ReflectionClass($classNamespace);
 					$method = $rClass->getMethod($func);
 					
 					$c = $method->getNumberOfParameters();
 					if ($c == 0) {
 						$result = $n->$func();
-					} else if($c == 1) {
+					} else if($c >= 1) {
+						$inst = array();
 						foreach ($method->getParameters() as $num => $parameter) {
 							$defClassName = $parameter->getType();
 							$defVariable = $parameter->getName();
 							if (is_object($defClassName)) {
 								$nam = '\\' . $defClassName;
-								$inst = new $nam;
-								$result = $n->$func($inst);
+								$inst[] = new $nam;
+							} else {
+								$inst[] = $parameter;
 							}
 						}
-					} else {
-						die('Fix Route > getControllerByUri > ReflectionClass');
+						if (count($inst) == 1) {
+							$result = $n->$func($inst[0]);
+						} elseif (count($inst) == 2) {
+							$result = $n->$func($inst[0], $inst[1]);
+						} elseif (count($inst) == 3) {
+							$result = $n->$func($inst[0], $inst[1], $inst[2]);
+						} else {
+							die('Fix Route > getControllerByUri > ReflectionClass');
+						}
 					}
 				}
 				if (is_array($result)) {
@@ -202,7 +223,7 @@ class Route {
 					exit;
 				} else {
 					echo $result;
-					if (BS::getConfig('showScriptRunTime')) { echo Debug::displayLogTime(); }
+					if (BS::getConfig('debug_show_script_run_time')) { echo Debug::displayLogTime(); }
 				}
 			} else {
 				trigger_error('Route "' . $uri . '" incorrectly setup. Contact Support!', E_USER_ERROR);

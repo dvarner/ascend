@@ -2,6 +2,7 @@
 
 use Ascend\Bootstrap as BS;
 use Ascend\Request;
+use Ascend\Feature\Validation;
 
 class Model {
 	
@@ -69,6 +70,13 @@ class Model {
 		return $fields;
 	}
 	
+	public static function insert($fields) {
+		BS::getDB()->insert(self::getTableName(), $fields);
+	}
+	
+	/**
+	 * Inserts or Updates
+	 */
 	public function save() {
 		
 		$modelNamespace = '\\' . get_called_class();
@@ -127,6 +135,28 @@ class Model {
 		return true;
 	}
 	
+	public function valid($addValidations) {
+		$validClass = new Validation;
+		
+		// $validations = array();
+		foreach ($addValidations AS $field => $newValidations) {
+			foreach ($newValidations AS $special => $newValidation) {
+				if (isset($this->validation[$field])) {
+					if (!in_array($newValidation, $this->validation[$field])) {
+						$validations[$field] = $this->validation[$field];
+						$validations[$field][$special] = $newValidation;
+					}
+				} else {
+					$validations[$field][$special] = $newValidation;
+				}
+			}
+		}
+		
+		$valid = new Validation;
+		$r = $valid->valid($validations);
+		return $r;
+	}
+	
 	/**
 	 * Static functions below
 	 */
@@ -140,6 +170,7 @@ class Model {
 	}
 	
 	public static function all() {
+		// @todo Find a way to use Database class
 		$table = self::getTableName();
 		
 		$sql = "SELECT * FROM {$table}";

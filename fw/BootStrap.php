@@ -48,27 +48,38 @@ class BootStrap
     public static function autoloader()
     {
         spl_autoload_register(function ($name) {
-
-            // App\Model\User
-            if (false === strpos($name, 'App' . '\\' . 'Model')) {
-                $path = strtolower($name);
-            } else {
-                $path = $name;
-            }
-
+			
             $DS = DIRECTORY_SEPARATOR;
+			if (
+				false === strpos($name, 'App\\Model')
+				&&
+				false === strpos($name, 'Ascend\\Feature')
+			) {
+				
+                $path = strtolower($name);
+				$path = str_replace('app' . $DS . 'controller' . $DS, 'app' . $DS . 'controllers' . $DS, $path);
+				// if($path == 'app\controller\controller') { $path = 'app\controllers\controller'; }
 
-            $path = str_replace('App' . '\\' . 'Models' . '\\', 'app' . $DS . 'models' . $DS, $path);
+				$path = str_replace('app' . $DS . 'controller' . $DS, 'app' . $DS . 'controllers' . $DS, $path);
+				// if($path == 'app\controller\controller') { $path = 'app\controllers\controller'; }
 
-            $path = str_replace('app' . $DS . 'controller' . $DS, 'app' . $DS . 'controllers' . $DS, $path);
-            // if($path == 'app\controller\controller') { $path = 'app\controllers\controller'; }
-
-            $path = str_replace('app' . $DS . 'controller' . $DS, 'app' . $DS . 'controllers' . $DS, $path);
-            // if($path == 'app\controller\controller') { $path = 'app\controllers\controller'; }
-
-            $path = str_replace('ascend' . $DS, 'fw' . $DS, $path);
-            // if($path == 'mimic\basecontroller') { $path = 'fw\basecontroller'; }
-
+				$path = str_replace('ascend' . $DS, 'fw' . $DS, $path);
+				// if($path == 'mimic\basecontroller') { $path = 'fw\basecontroller'; }
+				
+            } else {
+                
+				$path = $name;
+				
+				$path = str_replace('App\\Models\\', 'app' . $DS . 'models' . $DS, $path);
+				$path = str_replace('Ascend\\Feature\\', 'fw' . $DS . 'feature' . $DS, $path);
+            }
+			
+			/** REMOVED: Dev might want to alter how auth works so doesnt need to be part of framework
+			if ($name == 'AuthController') {
+				$path = 'fw' . $DS . 'feature' . $DS . $name;
+			}
+			*/
+			
             if (file_exists(PATH_PROJECT . $path . '.php')) {
                 require_once PATH_PROJECT . $path . '.php';
             } else {
@@ -76,7 +87,7 @@ class BootStrap
                 $path = str_replace('fw' . $DS, 'fw' . $DS . 'feature' . $DS, $path);
 
                 if (file_exists(PATH_PROJECT . $path . '.php')) {
-                    echo PATH_PROJECT . $path . '.php' . RET;
+                    // echo PATH_PROJECT . $path . '.php' . RET;
                     require_once PATH_PROJECT . $path . '.php';
                 } else {
                     echo '<pre>';
@@ -119,7 +130,8 @@ class BootStrap
 
     public static function existConfig($field)
     {
-        $reqConfig = array('maint', 'dev', 'debug', 'showScriptRunTime', 'https', 'domain', 'sub_folder', 'timezone', 'lock', 'lock_user', 'lock_pass', 'set_time_out');
+        $reqConfig = array('maint', 'dev', 'debug', 'debug_validation', 'debug_show_script_run_time',
+			'https', 'domain', 'sub_folder', 'timezone', 'lock', 'lock_user', 'lock_pass', 'set_time_out');
 
         if (in_array($field, $reqConfig)) {
             die('Variable required! "' . $field . '"');

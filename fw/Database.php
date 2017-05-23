@@ -102,6 +102,7 @@ class Database {
     }
 	
     public function where($table, $id, $expression, $value) {
+		$this->table = $table;
         $this->inc = (isset($this->inc) ? $this->inc + 1 : 1);
         if($expression == 'is' && $value == 'null'){
             $this->where[] = $table . '.' . $id . ' is null';
@@ -158,6 +159,10 @@ class Database {
 		
 		return true;
     }
+	public function getLastSQL(){
+        echo '<pre>';
+        var_dump($this->lastSQL);
+    }
 	/*
     public function deleteSoft($table, $id) {
         $this->table = $table;
@@ -195,17 +200,6 @@ class Database {
 	/*
     public function getPre() {
         return $this->db->getPre();
-    }
-    
-    public function getLastSQL(){
-        echo '<pre>';
-        var_dump($this->lastSQL);
-    }
-
-    public function first() {
-        $this->build();
-        $row = $this->db->single();
-        return $row;
     }
 
     // @todo Make $select accept string or array
