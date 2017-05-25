@@ -2,12 +2,14 @@
 
 use Ascend\BootStrap as BS;
 
-class Database {
-	
-	// private static $db = null;
+class Database
+{
+
+    // private static $db = null;
     private $bindStore = array();
 
-    public function __construct() {
+    public function __construct()
+    {
         try {
             $this->db = BS::getDBPDO(); // new DBPDO(); //$this->_config, $this->_class);
         } catch (Exception $e) {
@@ -15,46 +17,69 @@ class Database {
         }
     }
 
-    public static function table($table) {
-		$db = BS::getDB();
-		$db->table = $table;
-		return $db;
+    public static function table($table)
+    {
+        $db = BS::getDB();
+        $db->table = $table;
+        return $db;
     }
-	
-    public function get($keyAsId = true) {
+
+    public function get($keyAsId = true)
+    {
         $this->build();
         $row = $this->db->resultset($keyAsId);
         return $row;
     }
-	
-	public function first($keyAsId = true) {
-		$this->limit = 'LIMIT 1';
+
+    public function first($keyAsId = true)
+    {
+        $this->limit = 'LIMIT 1';
         $this->build();
         $row = $this->db->resultset($keyAsId);
-		foreach ($row AS $k => $v) {
-			if (is_numeric($k)) {
-				return $row[$k];
-			} else {
-				return $row;
-			}
-			exit;
-		}
+        foreach ($row AS $k => $v) {
+            if (is_numeric($k)) {
+                return $row[$k];
+            } else {
+                return $row;
+            }
+            exit;
+        }
     }
-		
-    private function build() {
-		
+
+    private function build()
+    {
+
         $sql = "";
-		if (!isset($this->select)) { $this->select = 'SELECT * FROM '; }
-        if (isset($this->select)) { $sql.= $this->select; unset($this->select); }
-		if (isset($this->table)) { $sql.= $this->table; unset($this->table); }
+        if (!isset($this->select)) {
+            $this->select = 'SELECT * FROM ';
+        }
+        if (isset($this->select)) {
+            $sql .= $this->select;
+            unset($this->select);
+        }
+        if (isset($this->table)) {
+            $sql .= $this->table;
+            unset($this->table);
+        }
         // if (isset($this->join)) { foreach ($this->join AS $v) { $sql.= " " . $v; unset($v); } unset($this->join); }
-		if (isset($this->where)) { $sql.= " WHERE " . implode(" AND ", $this->where); unset($this->where); }
+        if (isset($this->where)) {
+            $sql .= " WHERE " . implode(" AND ", $this->where);
+            unset($this->where);
+        }
         // if (isset($this->extra)) { $sql.= ' ' . implode(' ', $this->extra); unset($this->extra); }
-        if (isset($this->orderby)) { $sql.= ' ' . $this->orderby; unset($this->orderby); }
-        if (isset($this->limit)) { $sql.= ' ' . $this->limit; unset($this->limit); }
-		
-		// echo $sql . ' :line 206' . RET; exit;
-        if(!isset($this->bindStore)){ $this->bindStore = []; }
+        if (isset($this->orderby)) {
+            $sql .= ' ' . $this->orderby;
+            unset($this->orderby);
+        }
+        if (isset($this->limit)) {
+            $sql .= ' ' . $this->limit;
+            unset($this->limit);
+        }
+
+        // echo $sql . ' :line 206' . RET; exit;
+        if (!isset($this->bindStore)) {
+            $this->bindStore = [];
+        }
         $this->db->query($sql);
         $this->lastSQL['sql'] = $sql;
         $this->lastSQL['bind'] = $this->bindStore;
@@ -67,11 +92,12 @@ class Database {
             unset($this->bindStore);
         }
     }
-	
-	public function insert($table, $arr) {
+
+    public function insert($table, $arr)
+    {
         $this->table = $table;
         if (!isset($this->table)) {
-            die('table() function not set!');
+            trigger_error('table() function not set!', E_USER_ERROR);
         }
         $insert_id_arr = array();
         $fields = '';
@@ -79,11 +105,11 @@ class Database {
 
         // *** Build insert
         foreach ($arr AS $name => $value) {
-            $fields.= ($fields == '' ? '' : ', ') . $name;
-            $values.= ($values == '' ? '' : ', ') . ':' . $name;
+            $fields .= ($fields == '' ? '' : ', ') . '`' . $name . '`';
+            $values .= ($values == '' ? '' : ', ') . ':' . $name;
             unset($name, $value);
         }
-        $sql = 'INSERT INTO ' . $this->table . 
+        $sql = 'INSERT INTO ' . $this->table .
             ' (' . $fields . ') VALUES (' . $values . ')';
         $this->db->query($sql);
 
@@ -92,7 +118,7 @@ class Database {
             $this->db->bind(':' . $name, $value);
             unset($name, $value);
         }
-    
+
         $this->db->execute();
         // *** Get inserted id
         $insert_id = $this->db->lastInsertId();
@@ -100,36 +126,38 @@ class Database {
         // }
         return $insert_id;
     }
-	
-    public function where($table, $id, $expression, $value) {
-		$this->table = $table;
+
+    public function where($table, $id, $expression, $value)
+    {
+        $this->table = $table;
         $this->inc = (isset($this->inc) ? $this->inc + 1 : 1);
-        if($expression == 'is' && $value == 'null'){
+        if ($expression == 'is' && $value == 'null') {
             $this->where[] = $table . '.' . $id . ' is null';
-        }elseif($expression == 'is' && $value == 'not null'){
+        } elseif ($expression == 'is' && $value == 'not null') {
             $this->where[] = $table . '.' . $id . ' is not null';
-        }else{
+        } else {
             $this->where[] = $table . '.' . $id . ' ' . $expression . ' :' . $this->inc;
             $this->bindStore[] = array(':' . $this->inc, $value);
         }
         return $this;
-    }    
-	
-	public function update($table, $update, $where) {
+    }
+
+    public function update($table, $update, $where)
+    {
         $this->table = $table;
 
         $sql = 'UPDATE ' . $this->table . ' SET ';
         $sqlu = "";
-        foreach($update AS $k => $v){
-            $sqlu.= ($sqlu == ''?'':',') . $k.' = :'.$k;
+        foreach ($update AS $k => $v) {
+            $sqlu .= ($sqlu == '' ? '' : ',') . $k . ' = :' . $k;
         }
         // $sqlu.= ',updated_at = "' . \Carbon\Carbon::now() . '"';
-        $sql.= $sqlu;
+        $sql .= $sqlu;
         $sqlw = "";
-        foreach($where AS $k => $v){
-            $sqlw.= ($sqlw == ''?'':' && ') . $k.' = :'.$k;
+        foreach ($where AS $k => $v) {
+            $sqlw .= ($sqlw == '' ? '' : ' && ') . $k . ' = :' . $k;
         }
-        $sql.= " WHERE ".$sqlw;
+        $sql .= " WHERE " . $sqlw;
         // dd($sql,$update, $where); exit;
         $this->db->query($sql);
 
@@ -145,32 +173,35 @@ class Database {
 
         $this->db->execute();
     }
-	
-	public function delete($table, $id){
+
+    public function delete($table, $id)
+    {
         // return $this->deleteSoft($table, $id);
-		
-		$sql = 'DELETE FROM ' . $table . 
+
+        $sql = 'DELETE FROM ' . $table .
             ' WHERE id = :id';
         $this->db->query($sql);
 
         // *** Bind fields/values to query
         $this->db->bind(':id', $id);
         $this->db->execute();
-		
-		return true;
+
+        return true;
     }
-	public function getLastSQL(){
+
+    public function getLastSQL()
+    {
         echo '<pre>';
         var_dump($this->lastSQL);
     }
-	/*
+    /*
     public function deleteSoft($table, $id) {
         $this->table = $table;
         $update['deleted_at'] = \Carbon\Carbon::now();
         $where['id'] = $id;
         $this->update($table, $update, $where);
     }
-	/*
+    /*
     public function tableExists($table){
         // @todo -user:dvarner -date:12/9/2015 Need to update table to use $this->getPre()
         $sql = "SHOW TABLES LIKE '{$table}'";
@@ -178,26 +209,26 @@ class Database {
         $result = $this->db->resultset();
         return (count($result) > 0?true:false);
     }
-    
-	public static function select($sql, $bind = false) {
-		self::init();
+
+    public static function select($sql, $bind = false) {
+        self::init();
         self::$db->prepare($sql);
         // $this->lastSQL['sql'] = $sql;
         // $this->lastSQL['bind'] = $bind;
-		
-		if(is_array($bind) && count($bind) > 0) {
-			foreach ($bind AS $v) {
-				self::$db->bind($v[0], $v[1]);
-				unset($v);
-			}
-		}
-		
-		$rows = self::$db->execute();
-		
-		return $rows;
+
+        if(is_array($bind) && count($bind) > 0) {
+            foreach ($bind AS $v) {
+                self::$db->bind($v[0], $v[1]);
+                unset($v);
+            }
+        }
+
+        $rows = self::$db->execute();
+
+        return $rows;
     }
-	
-	/*
+
+    /*
     public function getPre() {
         return $this->db->getPre();
     }
@@ -238,9 +269,9 @@ class Database {
 
     public function orderBy($table, $id, $by = 'asc') {
         // die('orderBy Incomplete!');
-        
+
         if(!isset($this->orderby)){ $this->orderby = ''; }
-        
+
         $sql = ($this->orderby != '' ? ',' : ' ORDER BY ');
         $sql.= '' .
                 ($table != '' ? $this->getPre() . $table . '.' : '') .
@@ -337,7 +368,7 @@ class Database {
             $values.= ($values == '' ? '' : ', ') . ':' . $name;
             unset($name, $value);
         }
-        $sql = 'INSERT INTO ' . $this->getPre() . $this->table . 
+        $sql = 'INSERT INTO ' . $this->getPre() . $this->table .
             ' (' . $fields . ') VALUES (' . $values . ')';
         $this->db->query($sql);
 
@@ -346,7 +377,7 @@ class Database {
             $this->db->bind(':' . $name, $value);
             unset($name, $value);
         }
-    
+
         $this->db->execute();
         // *** Get inserted id
         $insert_id = $this->db->lastInsertId();
@@ -392,14 +423,14 @@ class Database {
             die('table() function not set!');
         }
 
-        $sql = 'DELETE FROM ' . $this->getPre() . $this->table . 
+        $sql = 'DELETE FROM ' . $this->getPre() . $this->table .
             ' WHERE id = :id';
         $this->db->query($sql);
 
         // *** Bind fields/values to query
         $this->db->bind(':id', $id);
         $this->db->execute();
-        
+
         // @todo -user:dvarner -date:01/11/2016 Add a return for success or failed
     }
 
@@ -429,30 +460,30 @@ class Database {
         $this->db->bind(':tbl', $this->getPre() . $table);
         $this->db->execute();
     }
-    
+
     public function create($file, $model){
 
         // @todo -user:dvarner -date:3/27/2016 Setup a way to pass in foreign keys
         require_once PATH_MODULES . $file . '/models/' . $model . '.php';
-        $dyn = '\\Ascend\\Modules\\' . $file . '\\Models\\' . $model;
+        $dyn = '\\Ascend\\Modules\\' . $file . '\\Model\\' . $model;
         $class = new $dyn;
-        
+
         $pre = $this->getPre();
-        
+
         if($model != 'Install'){
             $this->db->query("SELECT id FROM {$pre}install WHERE model = '{$model}'");
             $result = $this->db->resultset();
         }else{
             $result = [];
         }
-        
+
         if(count($result) == 0){
             $table = $class->getTable();
             echo 'Install: ' . $table . '<br />';
-            
+
             $sql = "CREATE TABLE IF NOT EXISTS `{$pre}{$table}` (";
                 //"`id` int(10) unsigned NOT NULL AUTO_INCREMENT,";
-            
+
                 $fields = $class->getFields();
                 foreach($fields AS $field => $attr){
                     $sql.= $field . ' ' . $attr . ',';
@@ -471,15 +502,15 @@ class Database {
                 }
 
             $sql.= ") ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1";
-            
+
             // echo $sql.'<br />';
-            
+
             $this->db->query($sql);
             $this->db->execute();
-            
+
             if(method_exists($class, 'getSeeder')){
                 $setSeeder = 0;
-                
+
                 $seeder = $class->getSeeder();
                 if(count($seeder) > 0){
                     if(count($result) == 0){
@@ -498,13 +529,13 @@ class Database {
             }
         }
     }
-    
-	public function install() {
-	}
-	
+
+    public function install() {
+    }
+
     public function uninstall() {
     }
-    
+
     public function checkConnection() {
         // @todo -user:dvarner -date:11/26/2015 Update this to allow different languages and better error
         $data = array(
@@ -513,7 +544,7 @@ class Database {
         );
         return json_encode($data,true);
     }
-    
+
     private function zcache($sec) {
         // *** @todo setup a way to cache queries for x seconds.
         // Instead of remember call cache.
@@ -528,7 +559,7 @@ class Database {
         // die('limit Incomplete!');
         return $this;
     }
-    
+
     private function zunsigned($field,$size=10) {
         // part of the chain building idea for creating tables
         $cnt = count($this->fields_arr);
@@ -536,7 +567,7 @@ class Database {
         // die('limit Incomplete!');
         return $this;
     }
-    
+
     private function zautoIncrement($field,$size=10) {
         // part of the chain building idea for creating tables
         $cnt = count($this->fields_arr);
@@ -565,8 +596,8 @@ class Database {
         // $this->db->bind(':tbl',$this->getPre().$table);
         // $this->db->execute();
     }
-    
-    
+
+
     public function zalter($table) {
         $sql = "ALTER TABLE " . $this->getPre() . $table;
     }
@@ -589,7 +620,7 @@ class Database {
         $this->attr[] = $sql;
         return $this;
     }
-    
+
     public function zcreate($table) {
         $this->table = $this->getPre() . $table;
         $this->fields_arr = array();
@@ -618,10 +649,10 @@ class Database {
             die('PDO > Create error: ' . $e->error());
         }
     }
-    
+
     public function zincrement($field){
         $this->fields_arr[] = "`{$field}` int(10) unsigned NOT NULL AUTO_INCREMENT";
         return $this;
     }
-	*/
+    */
 }

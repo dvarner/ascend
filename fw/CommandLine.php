@@ -15,11 +15,12 @@ class CommandLine
 
 		$output = '';
 		$output.= 'PHP Version: ' . phpversion() . RET;
-		$output.= 'Help; command not found!.' . RET;
+		$output.= 'Help! Command not found!.' . RET;
 		$output.= 'Here is a list of commands available:' . RET;
 
 		require_once PATH_COMMANDLINE . '_CommandLineAbstract.php';
-		
+
+		// Get Framework specific Command lines
 		$path = PATH_COMMANDLINE;
 		$cdir = scandir($path); 
 		foreach ($cdir as $key => $value) { 
@@ -33,6 +34,21 @@ class CommandLine
 				}
 			} 
 		}
+
+		// Get App specific Command Lines
+        $path = PATH_APP_COMMANDLINE;
+        $cdir = scandir($path);
+        foreach ($cdir as $key => $value) {
+            if (!in_array($value, array(".", ".."))) {
+                if (
+                    !is_dir($path . DIRECTORY_SEPARATOR . $value)
+                    &&
+                    '_' != substr($value, 0, 1)
+                ) {
+                    $output.= self::getEachModel($cmd, $path, $value);
+                }
+            }
+        }
 		
 		echo $output;
 		exit;

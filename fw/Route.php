@@ -83,7 +83,7 @@ class Route {
 			http_response_code(200);
 			header('Content-Type: text/html');
 			require_once $pathView;
-			if (BS::getConfig('debug_show_script_run_time')) { echo Debug::displayLogTime(); }
+			if (BS::getConfig('debug.script_runtime')) { echo Debug::displayLogTime(); }
 			exit;
 		}
 	}
@@ -145,7 +145,7 @@ class Route {
 	private static function getControllerByUri($path, $call, $uri, $dynVar, $dynVal) {
 		if (is_callable($call)) {
 			echo $call();
-			if (BS::getConfig('debug_show_script_run_time')) { echo Debug::displayLogTime(); }
+			if (BS::getConfig('debug.script_runtime')) { echo Debug::displayLogTime(); }
 		} else {
 			if (false !== strpos($call, '@')) {
 				
@@ -216,18 +216,53 @@ class Route {
 						echo '<pre>';
 						var_dump($result);
 					} else {
-						header('Content-Type: application/json');
+					    // @todo setup what sites are allowed to access api
+                        /*
+                        header('Access-Control-Allow-Origin: http://mysite1.com', false);
+                        header('Access-Control-Allow-Origin: http://example.com', false);
+                        header('Access-Control-Allow-Origin: https://www.mysite2.com', false);
+                        header('Access-Control-Allow-Origin: http://www.mysite2.com', false);
+                        */
+                        header("Access-Control-Allow-Origin: *");
+                        header("Access-Control-Allow-Methods: *");
+                        header("Content-Type: application/json");
 						echo json_encode($result);
 					}
 					
 					exit;
 				} else {
 					echo $result;
-					if (BS::getConfig('debug_show_script_run_time')) { echo Debug::displayLogTime(); }
+					if (BS::getConfig('debug.script_runtime')) { echo Debug::displayLogTime(); }
 				}
 			} else {
 				trigger_error('Route "' . $uri . '" incorrectly setup. Contact Support!', E_USER_ERROR);
 			}
 		}
 	}
+
+    /**
+     * @todo Found the following below and want to reference and use for header status output
+     */
+
+    private function processAPI() {
+        if (method_exists($this, $this->endpoint)) {
+            return $this->_response($this->{$this->endpoint}($this->args));
+        }
+        return $this->_response("No Endpoint: $this->endpoint", 404);
+    }
+
+    private function _response($data, $status = 200) {
+        header("HTTP/1.1 " . $status . " " . $this->_requestStatus($status));
+        return json_encode($data);
+    }
+
+    private function _requestStatus($code) {
+        $status = array(
+            200 => 'OK',
+            404 => 'Not Found',
+            405 => 'Method Not Allowed',
+            500 => 'Internal Server Error',
+        );
+        return ($status[$code])?$status[$code]:$status[500];
+    }
 }

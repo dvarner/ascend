@@ -4,11 +4,12 @@
 
 $title = 'User Create';
 
+// *** Content *** //
 ob_start();
 ?>
 	<h2>User Create</h2>
 	
-	<form id="formUserAdd" method="post" action="/api/user">
+	<form id="formAdd" method="post" action="/api/user">
 	  <div class="form-group">
 		<label for="inputUserUsername">Username</label>
 		<input type="text" class="form-control" id="inputUserUsername" name="username" placeholder="Username" />
@@ -18,24 +19,19 @@ ob_start();
 <?php
 $container = ob_get_contents();
 ob_end_clean();
+
+// *** Javascript *** //
 ob_start();
 ?>
-$(function(){
-	$('#formUserAdd').on('submit', function(e) {
-		e.preventDefault();
-		var ser = $(this).serialize();
-		$.post('/api/user', ser, function(d) {
-			// @todo catch success/failed status and do stuff
-			if (d.status == 'success') {
-				document.location = "/user";
-			} else {
-				console.log(d);
-			}
-		}, 'json');
-	});
+$(function() {
+
+    var afUser = ascendForm('User');
+    afUser.formCreate();
+
 });
 <?php
 $javascript = ob_get_contents();
 ob_end_clean();
 
+// *** Display Template *** //
 require_once __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR .'_template.php';

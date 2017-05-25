@@ -141,7 +141,7 @@ class Validation
 			// $this->result['success'] = true;
 		}
 		
-		if (BS::getConfig('debug_validation') === false) {
+		if (BS::getConfig('debug.validation') === false) {
 			unset($this->result['debug']);
 		}
 		

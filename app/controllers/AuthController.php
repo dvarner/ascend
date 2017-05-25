@@ -1,10 +1,10 @@
 <?php namespace App\Controller;
 
 // use Ascend\Database as DB;
-// use App\Models\User;
+// use App\Model\User;
 // use Ascend\Request;
 use App\Controller\Controller;
-use App\Models\User;
+use App\Model\User;
 use Ascend\Request;
 use Ascend\Route;
 use Ascend\Session;

@@ -1,7 +1,7 @@
 <?php namespace App\Controller;
 
 // use Ascend\Database as DB;
-// use App\Models\User;
+// use App\Model\User;
 // use Ascend\Request;
 // use Ascend\Route;
 

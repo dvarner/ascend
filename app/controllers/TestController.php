@@ -6,7 +6,7 @@ class TestController extends Controller {
 	
 	public function __construct() {
 		// By doing this; rest api is setup for this controller to defaults set by BaseController
-		$this->setModel('user');
+		$this->setModel('User');
 	}
 	
 	public function passRequest(Request $request) {

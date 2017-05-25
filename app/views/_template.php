@@ -1,6 +1,6 @@
 <html>
 <head>
-<title><?=$title ? $title : ''; ?></title>
+<title><?=@$title ? $title : ''; ?></title>
 
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 
@@ -34,9 +34,17 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="/js/jquery.ajax-put-delete.js"></script>
 <script src="/js/jquery.ascend.form.js"></script>
+<?php
+if (isset($script) && is_array($script)) {
+	foreach ($script AS $file) {
+		echo '<script src="' . $file . '"></script>' . PHP_EOL;
+	}
+}
+?>
 <script>
-<?=$javascript ? $javascript : '' ; ?>
+<?=@$javascript ? $javascript : ''; ?>
 </script>
 
 </body>

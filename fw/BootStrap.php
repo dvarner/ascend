@@ -48,38 +48,27 @@ class BootStrap
     public static function autoloader()
     {
         spl_autoload_register(function ($name) {
-			
+
             $DS = DIRECTORY_SEPARATOR;
-			if (
-				false === strpos($name, 'App\\Model')
-				&&
-				false === strpos($name, 'Ascend\\Feature')
-			) {
-				
-                $path = strtolower($name);
-				$path = str_replace('app' . $DS . 'controller' . $DS, 'app' . $DS . 'controllers' . $DS, $path);
-				// if($path == 'app\controller\controller') { $path = 'app\controllers\controller'; }
 
-				$path = str_replace('app' . $DS . 'controller' . $DS, 'app' . $DS . 'controllers' . $DS, $path);
-				// if($path == 'app\controller\controller') { $path = 'app\controllers\controller'; }
+            // Change namespace forward slashes to backward slashes for windows
+            $name = str_replace('\\', '/', $name);
 
-				$path = str_replace('ascend' . $DS, 'fw' . $DS, $path);
-				// if($path == 'mimic\basecontroller') { $path = 'fw\basecontroller'; }
-				
-            } else {
-                
-				$path = $name;
-				
-				$path = str_replace('App\\Models\\', 'app' . $DS . 'models' . $DS, $path);
-				$path = str_replace('Ascend\\Feature\\', 'fw' . $DS . 'feature' . $DS, $path);
-            }
-			
-			/** REMOVED: Dev might want to alter how auth works so doesnt need to be part of framework
-			if ($name == 'AuthController') {
-				$path = 'fw' . $DS . 'feature' . $DS . $name;
-			}
-			*/
-			
+            $path = $name;
+
+            $replacements = array(
+                'App' . $DS . 'CommandLine' . $DS => 'app' . $DS . 'commandline' . $DS,
+                'App' . $DS . 'Controller' . $DS => 'app' . $DS . 'controllers' . $DS,
+                'App' . $DS . 'Model' . $DS => 'app' . $DS . 'models' . $DS,
+                'Ascend' . $DS . 'Feature' . $DS => 'fw' . $DS . 'features' . $DS,
+                'Ascend' . $DS => 'fw' . $DS,
+            );
+
+            $find = array_keys($replacements);
+            $replace = array_values($replacements);
+
+            $path = str_replace($find, $replace, $path);
+
             if (file_exists(PATH_PROJECT . $path . '.php')) {
                 require_once PATH_PROJECT . $path . '.php';
             } else {
@@ -110,15 +99,32 @@ class BootStrap
         if (count(static::$_config) == 0) {
 
             /** Gets master configurations. */
-            $path_config = __DIR__ . '/../config.php';
+            $path_config = __DIR__ . '/../app/config.php';
             if (file_exists($path_config)) {
                 require_once $path_config;
             } else {
                 // @todo -user:dvarner -date:11/25/2015 Create better error for when config.php file not created
-                die('config.php does not exist! Please, copy config.sample.php and update with site information.');
+                trigger_error('app/config.php does not exist! Please, copy config.sample.php and update with site information.', E_USER_ERROR);
             }
 
+            // Setup defaults for configuration variables
+
             $_config['domain_full'] = ($_config['https'] === true ? 'https' : 'http') . '://www.' . $_config['domain'];
+
+            if (is_array($_config['debug'])) {
+                $_config['debug']['basic'] = true;
+                if (!isset($_config['debug']['script_runtime'])) {
+                    $_config['debug']['script_runtime'] = false;
+                }
+                if (!isset($_config['debug']['validation'])) {
+                    $_config['debug']['validation'] = false;
+                }
+            } else {
+                unset($_config['debug']);
+                $_config['debug']['basic'] = false;
+                $_config['debug']['script_runtime'] = false;
+                $_config['debug']['validation'] = false;
+            }
 
             static::$_config = $_config;
 
@@ -130,8 +136,7 @@ class BootStrap
 
     public static function existConfig($field)
     {
-        $reqConfig = array('maint', 'dev', 'debug', 'debug_validation', 'debug_show_script_run_time',
-			'https', 'domain', 'sub_folder', 'timezone', 'lock', 'lock_user', 'lock_pass', 'set_time_out');
+        $reqConfig = array('debug', 'dev', 'https', 'lock', 'maint', 'domain', 'timezone');
 
         if (in_array($field, $reqConfig)) {
             die('Variable required! "' . $field . '"');
@@ -160,6 +165,14 @@ class BootStrap
                 }
             } else {
                 $exp = explode('.', $field);
+
+                // @todo Override for debug if false for all sub fields
+                /*
+                if($exp[0] == 'debug') && static::$_config[$exp[0]] == false) {
+                    return false;
+                }
+                */
+
                 if (count($exp) == 2) {
                     if (isset(static::$_config[$exp[0]][$exp[1]])) {
                         return static::$_config[$exp[0]][$exp[1]];
@@ -213,7 +226,9 @@ class BootStrap
             set_time_limit(0);
         } else {
             $value = false;
-            set_time_limit(self::$_config['set_time_out']);
+            if (isset(self::$_config['set_time_out'])) {
+                set_time_limit(self::$_config['set_time_out']);
+            }
         }
         // define('IS_CRON', $value);
         // define('IS_COMMAND_LINE', $value);
@@ -227,7 +242,7 @@ class BootStrap
      */
     private static function setDebug()
     {
-        if (isset(self::$_config['debug']) && self::$_config['debug'] === true) {
+        if (isset(self::$_config['debug']['basic']) && self::$_config['debug']['basic'] === true) {
             error_reporting(E_ALL);
             ini_set('display_errors', 1);
         } else {

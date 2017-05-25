@@ -44,7 +44,9 @@ class Request
 			if (is_array($v)) {
 				$clean[$k] = $this->sanitize($v);
 			} else {
+			    // @todo fix cleaning of data...
 				$clean[$k] = addslashes($v); // mysqli_real_escape_string($v); // needs connection...
+                $clean[$k] = trim(strip_tags($v)); //
 			}
 		}
 		return $clean;
