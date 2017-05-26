@@ -6,9 +6,6 @@ use Ascend\Feature\Session;
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-
-Route::get('', function(){ echo '<p>Welcome to Ascend</p>'; });
-
 Route::view('/docs', 'docs/index');
 
 // All non controller route types
@@ -35,3 +32,13 @@ Route::rest('user',				'UserController');
 Route::get('/sudo/1', function(){
 	Session::set('user.id', 1);
 });
+
+// Auth System
+Route::get('/register', 'AuthController@viewRegister');
+Route::post('/api/auth/register', 'AuthController@postRegister');
+
+Route::get('/login', 'AuthController@viewLogin');
+Route::post('/api/auth/login', 'AuthController@postLogin');
+
+Route::get('/forgot', 'AuthController@viewPasswordReset');
+Route::post('/api/auth/forgot', 'AuthController@postPasswordReset');
