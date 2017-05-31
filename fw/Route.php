@@ -83,7 +83,7 @@ class Route {
 			http_response_code(200);
 			header('Content-Type: text/html');
 			require_once $pathView;
-			if (BS::getConfig('showScriptRunTime')) { echo Debug::displayLogTime(); }
+			if (BS::getConfig('debug.script_runtime')) { echo Debug::displayLogTime(); }
 			exit;
 		}
 	}
@@ -145,15 +145,28 @@ class Route {
 	private static function getControllerByUri($path, $call, $uri, $dynVar, $dynVal) {
 		if (is_callable($call)) {
 			echo $call();
-			if (BS::getConfig('showScriptRunTime')) { echo Debug::displayLogTime(); }
+			if (BS::getConfig('debug.script_runtime')) { echo Debug::displayLogTime(); }
 		} else {
 			if (false !== strpos($call, '@')) {
 				
 				list($class, $func) = explode('@', $call);
-				require_once PATH_CONTROLLERS . $class . '.php';
+				// require_once PATH_CONTROLLERS . $class . '.php';
+				if (file_exists(PATH_CONTROLLERS . $class . '.php')) {
+					$classNamespace = 'App' . '\\' . 'Controller' . '\\' . $class;
+				} else {
+					die($class . ' failed to load within Route::getControllerByUri()');
+					/** REMOVED: Dont want controllers in features or fw which are stuck the way they are. Give devs power to change.
+					if (file_exists(PATH_FRAMEWORK . 'feature' . DIRECTORY_SEPARATOR . $class . '.php')) {
+						$classNamespace = 'Ascend' . '\\' . 'Feature' . '\\' . $class;
+					} else {
+						die($class . ' failed to load within Route::getControllerByUri()');
+					}
+					*/
+				}
+				
+				$n = new $classNamespace;
+				
 				$call = str_replace('@', '::', $call);
-				$class = 'App' . '\\' . 'Controller' . '\\' . $class;
-				$n = new $class;
 				
 				$result = null;
 				if (isset($dynVar[1]) && count($dynVar[1]) == 1) {
@@ -167,25 +180,33 @@ class Route {
 				} elseif (isset($dynVar[1]) && count($dynVar[1]) > 4) {
 					trigger_error('Route does not suppore more than 4 dynamic variable. Fix in Route::getControllerByUri!', E_USER_ERROR);
 				} else {
-					
-					$rClass = new \ReflectionClass($class);
+					$rClass = new \ReflectionClass($classNamespace);
 					$method = $rClass->getMethod($func);
 					
 					$c = $method->getNumberOfParameters();
 					if ($c == 0) {
 						$result = $n->$func();
-					} else if($c == 1) {
+					} else if($c >= 1) {
+						$inst = array();
 						foreach ($method->getParameters() as $num => $parameter) {
 							$defClassName = $parameter->getType();
 							$defVariable = $parameter->getName();
 							if (is_object($defClassName)) {
 								$nam = '\\' . $defClassName;
-								$inst = new $nam;
-								$result = $n->$func($inst);
+								$inst[] = new $nam;
+							} else {
+								$inst[] = $parameter;
 							}
 						}
-					} else {
-						die('Fix Route > getControllerByUri > ReflectionClass');
+						if (count($inst) == 1) {
+							$result = $n->$func($inst[0]);
+						} elseif (count($inst) == 2) {
+							$result = $n->$func($inst[0], $inst[1]);
+						} elseif (count($inst) == 3) {
+							$result = $n->$func($inst[0], $inst[1], $inst[2]);
+						} else {
+							die('Fix Route > getControllerByUri > ReflectionClass');
+						}
 					}
 				}
 				if (is_array($result)) {
@@ -195,18 +216,53 @@ class Route {
 						echo '<pre>';
 						var_dump($result);
 					} else {
-						header('Content-Type: application/json');
+					    // @todo setup what sites are allowed to access api
+                        /*
+                        header('Access-Control-Allow-Origin: http://mysite1.com', false);
+                        header('Access-Control-Allow-Origin: http://example.com', false);
+                        header('Access-Control-Allow-Origin: https://www.mysite2.com', false);
+                        header('Access-Control-Allow-Origin: http://www.mysite2.com', false);
+                        */
+                        header("Access-Control-Allow-Origin: *");
+                        header("Access-Control-Allow-Methods: *");
+                        header("Content-Type: application/json");
 						echo json_encode($result);
 					}
 					
 					exit;
 				} else {
 					echo $result;
-					if (BS::getConfig('showScriptRunTime')) { echo Debug::displayLogTime(); }
+					if (BS::getConfig('debug.script_runtime')) { echo Debug::displayLogTime(); }
 				}
 			} else {
 				trigger_error('Route "' . $uri . '" incorrectly setup. Contact Support!', E_USER_ERROR);
 			}
 		}
 	}
+
+    /**
+     * @todo Found the following below and want to reference and use for header status output
+     */
+
+    private function processAPI() {
+        if (method_exists($this, $this->endpoint)) {
+            return $this->_response($this->{$this->endpoint}($this->args));
+        }
+        return $this->_response("No Endpoint: $this->endpoint", 404);
+    }
+
+    private function _response($data, $status = 200) {
+        header("HTTP/1.1 " . $status . " " . $this->_requestStatus($status));
+        return json_encode($data);
+    }
+
+    private function _requestStatus($code) {
+        $status = array(
+            200 => 'OK',
+            404 => 'Not Found',
+            405 => 'Method Not Allowed',
+            500 => 'Internal Server Error',
+        );
+        return ($status[$code])?$status[$code]:$status[500];
+    }
 }

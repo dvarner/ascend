@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Model;
 
 use Ascend\Model;
 
@@ -22,5 +22,20 @@ class User extends Model
 		'username' 	=> 'varchar(255) NOT NULL',
 		'password' 	=> 'varchar(255) NOT NULL',
 		'confirm'	=> 'varchar(255) NOT NULL',
+		'timezone' 	=> 'varchar(50) NOT NULL',
+		'language'  => 'varchar(10) NOT NULL',
+		'country'   => 'varchar(2) NOT NULL',
+	);
+	
+	protected $validation = array(
+		'id'		=> array('int'),
+		'role_id'	=> array('int'),
+		'email'		=> array('email'),
+		'username'	=> array('username'),
+		'password'	=> array('password'),
+		'confirm' 	=> array('string'),
+		'timezone'	=> array('string'),
+		'language'	=> array('string'),
+		'country'	=> array('string'),
 	);
 }
