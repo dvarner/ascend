@@ -1,4 +1,22 @@
 {
+<<<<<<< HEAD
+  "name": "dvarner/ascendphp",
+  "description": "Ascend is a PHP Framework",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "David Varner",
+      "email": "info@ascendphp.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "require": {
+    "php": ">=5.2.0",
+    "nesbot/carbon": "^1.21",
+    "filp/whoops": "1.*"
+  }
+}
+=======
     "name": "dvarner/ascendphp",
     "description": "Ascend is a PHP Framework",
     "license": "MIT",
@@ -16,3 +34,4 @@
         "dvarner/ascendphp-core": "dev-master"
     }
 }
+>>>>>>> 810f0fcccb1d855dfc6fe3196c0f613a7d3543cb
