@@ -4,8 +4,47 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "82f3fd36e0799d2673796098952e2406",
+    "hash": "3728d5ac34f1a689169929dd00611a79",
+    "content-hash": "e9f5c45a4d953b8acb1b493db06a1c6b",
     "packages": [
+        {
+            "name": "dvarner/ascendphp-core",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dvarner/ascendphp-core.git",
+                "reference": "a2fc933050076a689d210e4012f55e915fbf6320"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dvarner/ascendphp-core/zipball/a2fc933050076a689d210e4012f55e915fbf6320",
+                "reference": "a2fc933050076a689d210e4012f55e915fbf6320",
+                "shasum": ""
+            },
+            "require": {
+                "filp/whoops": "1.*",
+                "nesbot/carbon": "^1.21",
+                "php": ">=5.2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Ascend": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "David Varner",
+                    "email": "info@ascendphp.com"
+                }
+            ],
+            "description": "Ascend is a PHP Framework. These are its core files.",
+            "time": "2017-05-26 01:19:02"
+        },
         {
             "name": "filp/whoops",
             "version": "1.x-dev",
@@ -178,16 +217,16 @@
         },
         {
             "name": "symfony/translation",
-            "version": "dev-master",
+            "version": "3.4.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "2a6f7a97421875ea66ace2fc943c2303d4d2289d"
+                "reference": "b6d9301458e2a3ffee06ec7a44769b80671c2803"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/2a6f7a97421875ea66ace2fc943c2303d4d2289d",
-                "reference": "2a6f7a97421875ea66ace2fc943c2303d4d2289d",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/b6d9301458e2a3ffee06ec7a44769b80671c2803",
+                "reference": "b6d9301458e2a3ffee06ec7a44769b80671c2803",
                 "shasum": ""
             },
             "require": {
@@ -200,9 +239,9 @@
             },
             "require-dev": {
                 "psr/log": "~1.0",
-                "symfony/config": "~2.8|~3.0",
-                "symfony/intl": "^2.8.18|^3.2.5",
-                "symfony/yaml": "~3.3"
+                "symfony/config": "~2.8|~3.0|~4.0",
+                "symfony/intl": "^2.8.18|^3.2.5|~4.0",
+                "symfony/yaml": "~3.3|~4.0"
             },
             "suggest": {
                 "psr/log": "To use logging capability in translator",
@@ -212,7 +251,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.3-dev"
+                    "dev-master": "3.4-dev"
                 }
             },
             "autoload": {
@@ -239,13 +278,15 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
-            "time": "2017-04-12 14:14:56"
+            "time": "2017-05-24 09:02:43"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "dvarner/ascendphp-core": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
