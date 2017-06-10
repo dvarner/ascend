@@ -1,4 +1,4 @@
-<?php namespace App\CommandLine;
+<?php namespace Ascend\CommandLine;
 
 use Ascend\CommandLine\_CommandLineAbstract;
 use Ascend\CommandLineArguments;
