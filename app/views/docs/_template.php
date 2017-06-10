@@ -74,12 +74,11 @@
             <div class="row">
                 <p><a class="doc-header" name="install">Install</a></p>
                 <p>Install composer</p>
-                <p>git checkout "url" ???</p>
-                <p>##Run 'composer global require "dvarner/ascendphp"'</p>
-                <p>Run 'composer require "dvarner/ascendphp"'</p>
                 <p>Run 'composer create-project --prefer-dist dvarner/ascendphp ascend'</p>
                 <p>Run 'cp app/config.sample.php app/config.php'</p>
                 <p>Update app/config.php settings</p>
+                <p>chmod 0775 public</p>
+                <p>chmod 0644 public/index.php</p>
             </div>
 
             <div class="row">

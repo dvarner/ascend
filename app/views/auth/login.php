@@ -6,6 +6,8 @@ $title = 'Login';
 
 ob_start();
 ?>
+<div id="alert-success" class="alert alert-success" role="alert"></div>
+<div id="alert-error" class="alert alert-danger" role="alert"></div>
 <form method="post" action="/api/auth/login">
   <div class="form-group">
     <label for="inputEmail">Email</label>
@@ -25,7 +27,36 @@ ob_end_clean();
 ob_start();
 ?>
 $(function(){
+    $('#alert-success').hide();
+    $('#alert-error').hide();
+    $('form').on('submit', function(e) {
+        var t = $(this);
+        e.preventDefault();
+        var ser = $(this).serialize();
+        $.post(t.attr('action'), ser, function(d) {
+            htm = '';
+            if (d.success) {
+                htm += 'Login successful! Redirect in 3 seconds!';
+                $('#alert-success').html(htm);
 
+                $('#alert-success').show();
+                $('#alert-error').hide();
+
+                setTimeout(function () {
+                    window.location.href = '/lobby/index';
+                }, 3000); // 3 seconds
+            }
+            if (d.error) {
+                $.each(d.error, function(i, v) {
+                    htm += v + '<br />';
+                });
+                $('#alert-error').html(htm);
+
+                $('#alert-success').hide();
+                $('#alert-error').show();
+            }
+        }, 'json');
+    });
 });
 <?php
 $javascript = ob_get_contents();

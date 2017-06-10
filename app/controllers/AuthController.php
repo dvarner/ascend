@@ -1,13 +1,14 @@
 <?php namespace App\Controller;
 
-// use Ascend\Database as DB;
+use Ascend\Bootstrap as BS;
+use Ascend\Database as DB;
 // use App\Model\User;
 // use Ascend\Request;
 use App\Controller\Controller;
 use App\Model\User;
 use Ascend\Request;
 use Ascend\Route;
-use Ascend\Session;
+use Ascend\Feature\Session;
 use Ascend\Feature\Validation;
 
 class AuthController extends Controller {
@@ -25,6 +26,8 @@ class AuthController extends Controller {
 	 */
 	public function postRegister(User $user) {
 		
+        $cost = BS::getConfig('password_cost');
+        
 		$validations['email'] = array();
 		$validations['email'][] = 'required';
 		$validations['email']['unique'] = 'users';
@@ -47,6 +50,7 @@ class AuthController extends Controller {
 			$insert['timezone'] = 'America/New_York';
 			$insert['language'] = 'en-US';
 			$insert['country'] = 'US';
+            $insert['password'] = password_hash($insert['password'], PASSWORD_BCRYPT, array('cost', $cost));
 			User::insert($insert);
 		}
 
@@ -66,22 +70,30 @@ class AuthController extends Controller {
 	 */
 	public function postLogin(User $user, Request $request) {
 
+        $cost = BS::getConfig('password_cost');
+        
         $validations['email'] = array();
         $validations['email'][] = 'required';
-        $validations['email']['unique'] = 'users';
         $validations['password'] = array();
         $validations['password'][] = 'required';
 
         $isValid = $user->valid($validations);
+        unset($isValid['data']);
 
         $email = $request->get('email');
         $password = $request->get('password');
 
-        if (isset($isValid['success'])) {
-            $user = User::where('email', '=', $email)
-                ->where('password', '=', $password)
-                ->get();
-            Session::set('user.id', $user->id);
+
+        if (isset($isValid['success'])){
+            $user = DB::table('users')
+                ->where('email', '=', $email)
+                ->first();
+            if (password_verify($password, $user['password'])) {
+                Session::set('user.id', $user['id']);
+            } else {
+                unset($isValid);
+                $isValid['error'] = 'Password does not match!';
+            }
         }
 
         return $isValid;
@@ -101,6 +113,14 @@ class AuthController extends Controller {
 	public function postPasswordReset() {
 		
 	}
+    
+    public function logout() {
+        // @todo fix this later to use Ascend\Feature\Session
+        session_destroy();
+        session_start();
+        unset($_SESSION);
+        header("location: /");
+    }
 	
 	private function confirmation() {
 		return md5( time() . ':' . rand(1000, 9999) );
