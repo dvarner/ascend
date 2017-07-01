@@ -66,7 +66,7 @@ class AuthController extends Controller
      */
     public function viewLogin()
     {
-        return Route::getView('auth/login');
+        return Route::getView('_login');
     }
 
     /**
