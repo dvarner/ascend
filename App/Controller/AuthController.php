@@ -29,18 +29,17 @@ class AuthController extends Controller
      */
     public function postRegister(User $user)
     {
-
         $cost = BS::getConfig('password_cost');
 
-        $validations['email'] = array();
+        $validations['email'] = [];
         $validations['email'][] = 'required';
         $validations['email']['unique'] = 'users';
-        $validations['username'] = array();
+        $validations['username'] = [];
         $validations['username'][] = 'required';
         $validations['username']['unique'] = 'users';
-        $validations['password'] = array();
+        $validations['password'] = [];
         $validations['password'][] = 'required';
-        $validations['tos'] = array();
+        $validations['tos'] = [];
         $validations['tos'][] = 'required';
         $validations['tos'][] = 'accepted';
 
@@ -98,7 +97,7 @@ class AuthController extends Controller
                 Session::set('user.id', $user['id']);
             } else {
                 unset($isValid);
-                $isValid['error'] = 'Password does not match!';
+                $isValid['error'][] = 'Password does not match!';
             }
         }
 

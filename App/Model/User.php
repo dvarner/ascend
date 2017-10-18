@@ -2,25 +2,21 @@
 
 namespace App\Model;
 
+use Ascend\Bootstrap as BS;
 use Ascend\Model;
 
 class User extends Model
 {
-    // use SoftDelete;
-
     protected $table = 'users';
+    protected $fillable = ['role_id',
+        'email', 'username', 'firstname', 'lastname', 'password',
+        'confirm', 'timezone', 'language', 'country', 'is_active'];
 
-    public $timestamps = true; // true = created_at, updated_at are added to the table, also deleted_at for this framework
-    // protected $dates = ['deleted_at']; // Soft Delete if exist
-    protected $fillable = array('role_id', 'email', 'firstname', 'lastname',
-        'confirm', 'timezone', 'language', 'country', 'is_active');
-    protected $guarded = array('password');
-
-    protected $structure = array(
+    protected $structure = [
         'id' => 'int unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY',
         'role_id' => 'int unsigned NOT NULL',
         'email' => 'varchar(255) NOT NULL',
-        // 'username' => 'varchar(255) NOT NULL',
+        'username' => 'varchar(255) NOT NULL',
         'firstname' => 'varchar(255) NOT NULL',
         'lastname' => 'varchar(255) NOT NULL',
         'password' => 'varchar(255) NOT NULL',
@@ -29,20 +25,96 @@ class User extends Model
         'language' => 'varchar(10) NOT NULL',
         'country' => 'varchar(2) NOT NULL',
         'is_active' => 'tinyint unsigned not null',
-    );
+    ];
 
-    protected $validation = array(
-        'id' => array('int'),
-        'role_id' => array('int'),
-        'email' => array('email'),
-        // 'username' => array('username'),
-        'password' => array('password'),
-        'firstname' => array('string'),
-        'lastname' => array('string'),
-        'confirm' => array('string'),
-        'timezone' => array('string'),
-        'language' => array('string'),
-        'country' => array('string'),
-        'tinyint' => ['int'],
-    );
+    protected $validation = [
+        'id' => 'int',
+        'role_id' => 'int',
+        'email' => 'email',
+        'username' => 'username',
+        'password' => 'password',
+        'firstname' => 'string',
+        'lastname' => 'string',
+        'confirm' => 'string',
+        'timezone' => 'string',
+        'language' => 'string',
+        'country' => 'string',
+        'is_active' => 'int',
+    ];
+
+    public static function isActive() {
+        $table = self::getTableName();
+        $db = BS::getDBPDO();
+
+        $sql = "SELECT * FROM {$table} WHERE is_active = :is_active";
+        $db->query($sql);
+        $db->bind(':is_active', 1);
+        $row = $db->resultset();
+
+        return $row;
+    }
+
+    public static function getById($id) {
+        $table = self::getTableName();
+
+        if (is_null($id)) {
+            die('<a href="/">You have been logged out, click here to go to login page"</a>');
+        }
+
+        $sql = "SELECT * FROM {$table}";
+        $sql.= " WHERE ";
+        $sql.= "id = {$id}";
+        $db = BS::getDBPDO();
+        $db->query($sql);
+        $db->execute();
+        $row = $db->resultset(false);
+        $row = isset($row[0]) ? $row[0] : null;
+
+        return $row;
+    }
+
+    public static function getAdmins() {
+        $table = self::getTableName();
+
+        $sql = "SELECT * FROM {$table}";
+        $sql.= " WHERE ";
+        $sql.= "deleted_at IS NULL";
+        $sql.= " AND role_id = 1";
+        $sql.= " ORDER BY lastname, firstname";
+
+        $db = BS::getDBPDO();
+        $db->query($sql);
+        $db->execute();
+        return $db->resultset();
+    }
+
+    public static function getModerators() {
+        $table = self::getTableName();
+
+        $sql = "SELECT * FROM {$table}";
+        $sql.= " WHERE ";
+        $sql.= "deleted_at IS NULL";
+        $sql.= " AND role_id = 2";
+        $sql.= " ORDER BY lastname, firstname";
+
+        $db = BS::getDBPDO();
+        $db->query($sql);
+        $db->execute();
+        return $db->resultset();
+    }
+
+    public static function getMembers() {
+        $table = self::getTableName();
+
+        $sql = "SELECT * FROM {$table}";
+        $sql.= " WHERE ";
+        $sql.= "deleted_at IS NULL";
+        $sql.= " AND role_id = 3";
+        $sql.= " ORDER BY lastname, firstname";
+
+        $db = BS::getDBPDO();
+        $db->query($sql);
+        $db->execute();
+        return $db->resultset();
+    }
 }

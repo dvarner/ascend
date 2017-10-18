@@ -7,7 +7,8 @@ var ascendForm = function (model) {
     var config = {
         model: model,
         api: '/api/',
-        pathSub: ''
+        pathSub: '',
+        saveRow: '',
     };
     config.model = config.model.toLowerCase();
     config.uri = config.api + config.pathSub + config.model;
@@ -30,34 +31,63 @@ var ascendForm = function (model) {
             var t = this;
             config[k] = v;
             config.uri = config.api + config.pathSub + config.model;
-            console.log(config.uri);
         }
         ///////////////////////////////////////
         // *** Functions
         , formGet: function () {
             var t = this;
 
-            $.get(config.uri, function (d) {
+            var getFilters = '';
+            $("[af-filter]").each(function(i, v) {
+                if (getFilters == '') {
+                    getFilters+= '?';
+                } else {
+                    getFilters+= '&';
+                }
+                getFilters+= $(v).attr('af-filter') + '=' + $(v).val();
+            });
+
+            var getURL = encodeURI(config.uri + getFilters);
+            $.get(getURL, function (d) {
                 // t.tplReplace('[data=' + config.model + ']', d);
                 // t.tplReplace('[af-data-section=' + config.model + ']', d);
                 t.tplReplace(config.model, d);
-
             }, 'json');
         }
-        , formCreate: function () {
+        , formCreate: function (redirect, refresh) {
+            redirect = (typeof redirect !== 'undefined') ? redirect : true;
+            refresh = (typeof refresh !== 'undefined') ? refresh : false;
             var t = this;
             $('#formAdd').on('submit', function (e) {
                 var tt = this;
                 e.preventDefault();
-                var ser = $(tt).serialize();
-                $.post($(tt).attr('action'), ser, function (d) {
-                    // @todo catch success/failed status and do stuff
-                    if (d.status == 'success') {
-                        document.location = "/" + config.pathSub + config.model;
-                    } else {
-                        alert('Error: ' + d.error);
-                    }
-                }, 'json');
+                if (
+                    typeof $('#formSubmit').prop('disabled') == 'undefined'
+                    || $('#formSubmit').prop('disabled') === false
+                ) {
+                    var ser = $(tt).serialize();
+                    $.post($(tt).attr('action'), ser, function (d) {
+                        // @todo catch success/failed status and do stuff
+                        if (d.status == 'success') {
+                            if (redirect === true) {
+                                window.location.href = "/" + config.pathSub + config.model + '?success';
+                            } else {
+                                var htm = '';
+                                $.each(d.success, function(i, v) {
+                                    htm += '<p>' + v + '</p>';
+                                });
+                                $('#alert-success').html(htm);
+                                $('#alert-success').show();
+                                $('#alert-error').hide();
+                                if (refresh === true) {
+                                    t.formGet();
+                                }
+                            }
+                        } else {
+                            alert('Error: ' + d.error);
+                        }
+                    }, 'json');
+                }
             });
         }
         , formEdit: function () {
@@ -65,10 +95,12 @@ var ascendForm = function (model) {
             var fe = $('#formEdit');
             var id = t.getUriId();
 
-            // $.get(config.uri + '/' + id, function (d) {
             $.get(config.uri + '/' + id, function (d) {
                 $.each(d, function(i, v) {
-                    $('#input' + t.ucFirst(config.model) + t.ucFirst(i)).val(v);
+                    /* @todo later make this work with form + child not just name */
+                    $('[name=' + i + ']').val(v);
+                    // $('#input' + t.ucFirst(config.model) + t.ucFirst(i)).val(v);
+                    // $('' + t.ucFirst(config.model) + t.ucFirst(i)).val(v);
                 });
             }, 'json');
 
@@ -151,34 +183,20 @@ var ascendForm = function (model) {
         }
         ///////////////////////////////////////
         // *** Supporting Functions
-        /*, tplReplace: function(obj, d) {
-            var t = this;
-
-            var row = $(obj);
-
-            var addRow = row.clone(); // Get the HTML template
-            row.html(''); // Clear the HTML template
-
-            $.each(d, function (i, v) { // Replace
-                var html = addRow.html();
-                $.each(v, function(field, value){
-                    if (typeof html != 'undefined') {
-                        var regex = new RegExp(t.escapeRegExp('[['+field+']]'), 'g');
-                        html = html.replace(regex, value);
-                        var regex = new RegExp(t.escapeRegExp('[['+field+'_checkbox_value]]'), 'g');
-                        html = html.replace(regex, ( value == 1 ? 'checked="checked"' : '') );
-                    }
-                });
-                row.append(html);
-            });
-        }*/
         , tplReplace: function (sect, d) {
             var t = this;
 
-            var row = $('[af-data-section=' + sect + ']');
+            if (config.saveRow == '') {
+                var row = $('[af-data-section=' + sect + ']');
+                config.saveRow = row.clone();
+                var addRowOrig = row.clone(); // Get the HTML template
+            } else {
+                var addRowOrig = config.saveRow;
+            }
 
-            var addRowOrig = row.clone(); // Get the HTML template
-            row.html(''); // Clear the HTML template
+            $('[af-data-section=' + sect + ']').html('');
+
+            // row.html(''); // Clear the HTML template
 
             $.each(d, function (i, v) { // Replace
                 var addRow = addRowOrig.clone();
@@ -194,7 +212,7 @@ var ascendForm = function (model) {
                         html = html.replace(regex, ( value == 1 ? 'checked="checked"' : '') );
                     // }
                 });
-                row.append(html);
+                $('[af-data-section=' + sect + ']').append(html);
             });
         }
         , escapeRegExp: function(stringToGoIntoTheRegex) {
