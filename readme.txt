@@ -9,6 +9,9 @@ Go to AcendPHP.com for more information.
 composer create-project --prefer-dist dvarner/ascendphp . --stability dev
 composer install
 
+cp App/config.sample.php App/config.php
+# Add database config data
+
 php ascend db:migrate
 php ascend permission:manage
 php ascend user:create 1 admin [pass] email@email
