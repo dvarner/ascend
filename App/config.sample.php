@@ -70,4 +70,4 @@ $_config = [
         'access' => false
     ),
 	*/
-);
+];
