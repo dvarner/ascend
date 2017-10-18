@@ -13,7 +13,6 @@
         "php": ">=5.4.0",
         "nesbot/carbon": "^1.21",
         "filp/whoops": "1.*",
-		"coinbase/coinbase": "~2.0",
         "dvarner/ascendphp-core": "dev-master"
     }
 }
