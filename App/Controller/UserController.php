@@ -1,11 +1,11 @@
 <?php namespace App\Controller;
 
 use App\Controller\Controller;
-use Ascend\BootStrap as BS;
-use Ascend\Database;
-use Ascend\Feature\Permission;
-use Ascend\Request;
-use Ascend\Route;
+use Ascend\Core\BootStrap;
+use Ascend\Core\Database;
+use Ascend\Core\Feature\Permission;
+use Ascend\Core\Request;
+use Ascend\Core\Route;
 use App\Model\Role;
 use App\Model\User;
 use \MailgunApi;
@@ -57,7 +57,7 @@ class UserController extends Controller
         $exist = User::where('email', '=', $data['email'])->first();
 
         $_POST['confirm'] = md5($data['email'] . time());
-        $_POST['password'] = password_hash($data['password'], PASSWORD_BCRYPT, ['cost' => BS::getConfig('password_cost')]);
+        $_POST['password'] = password_hash($data['password'], PASSWORD_BCRYPT, ['cost' => Bootstrap::getConfig('password_cost')]);
 
         if (is_null($exist)) {
             return parent::methodPost();

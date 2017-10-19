@@ -2,8 +2,8 @@
 
 namespace App\Model;
 
-use Ascend\Bootstrap as BS;
-use Ascend\Model;
+use Ascend\Core\Bootstrap;
+use Ascend\Core\Model;
 
 class User extends Model
 {
@@ -44,7 +44,7 @@ class User extends Model
 
     public static function isActive() {
         $table = self::getTableName();
-        $db = BS::getDBPDO();
+        $db = Bootstrap::getDBPDO();
 
         $sql = "SELECT * FROM {$table} WHERE is_active = :is_active";
         $db->query($sql);
@@ -64,7 +64,7 @@ class User extends Model
         $sql = "SELECT * FROM {$table}";
         $sql.= " WHERE ";
         $sql.= "id = {$id}";
-        $db = BS::getDBPDO();
+        $db = Bootstrap::getDBPDO();
         $db->query($sql);
         $db->execute();
         $row = $db->resultset(false);
@@ -82,7 +82,7 @@ class User extends Model
         $sql.= " AND role_id = 1";
         $sql.= " ORDER BY lastname, firstname";
 
-        $db = BS::getDBPDO();
+        $db = Bootstrap::getDBPDO();
         $db->query($sql);
         $db->execute();
         return $db->resultset();
@@ -97,7 +97,7 @@ class User extends Model
         $sql.= " AND role_id = 2";
         $sql.= " ORDER BY lastname, firstname";
 
-        $db = BS::getDBPDO();
+        $db = Bootstrap::getDBPDO();
         $db->query($sql);
         $db->execute();
         return $db->resultset();
@@ -112,7 +112,7 @@ class User extends Model
         $sql.= " AND role_id = 3";
         $sql.= " ORDER BY lastname, firstname";
 
-        $db = BS::getDBPDO();
+        $db = Bootstrap::getDBPDO();
         $db->query($sql);
         $db->execute();
         return $db->resultset();

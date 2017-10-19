@@ -1,12 +1,11 @@
 <?php namespace App\Controller;
 
-use Ascend\BootStrap as BS;
+use Ascend\Core\BootStrap;
+use Ascend\Core\Request;
 use App\Model\MapPlanet;
 use App\Model\MapPlanetResource;
 use App\Model\MapUniverse;
 use App\Model\Resource;
-use Ascend\Request;
-use Ascend\Route;
 
 class RegisterController extends Controller {
 
@@ -14,7 +13,7 @@ class RegisterController extends Controller {
     private $request = null;
 
     public function __construct() {
-        $this->db = BS::getDBPDO();
+        $this->db = Bootstrap::getDBPDO();
         $this->request = new Request;
     }
 }

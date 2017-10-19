@@ -2,10 +2,10 @@
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-use \Ascend\BootStrap as BS;
-use \Ascend\Route as Route;
+use Ascend\Core\BootStrap;
+use Ascend\Core\Route;
 
-BS::init();
+Bootstrap::init();
 
 Route::maint();
 Route::lock();

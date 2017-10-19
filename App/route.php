@@ -1,5 +1,5 @@
 <?php
-use \Ascend\Route as Route;
+use Ascend\Core\Route;
 
 Route::get('/access-denied', function() {
     return Route::getView('access-denied');

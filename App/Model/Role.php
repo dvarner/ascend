@@ -2,7 +2,7 @@
 
 namespace App\Model;
 
-use Ascend\Model;
+use Ascend\Core\Model;
 
 class Role extends Model
 {
