@@ -27,7 +27,9 @@ php ascend user:create 1 admin [pass] email@email
 # FAQ
 
 Q: Getting a 500 error after running compuser create?
-A: Do composer install.
+A1: Do composer install.
+A2: Next make sure to copy config.sample.php to config.php
+A3: Make sure to have correct database credentials
 
 Q: Ascend\[name] does not exist?
 A: As of 10/18/1017 the namespace was updated to Ascend\Core\[name]
