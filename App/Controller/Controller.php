@@ -1,6 +1,6 @@
 <?php namespace App\Controller;
 
-use Ascend\BaseController;
+use Ascend\Core\BaseController;
 use App\Model\ForumCategories;
 
 class Controller extends BaseController {

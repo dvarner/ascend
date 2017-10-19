@@ -1,16 +1,13 @@
 <?php namespace App\Controller;
 
-use Ascend\Bootstrap as BS;
-use Ascend\Database as DB;
-
 // use App\Model\User;
 // use Ascend\Request;
 use App\Controller\Controller;
 use App\Model\User;
-use Ascend\Request;
-use Ascend\Route;
-use Ascend\Feature\Session;
-use Ascend\Feature\Validation;
+use Ascend\Core\Request;
+use Ascend\Core\Route;
+use Ascend\Core\Feature\Session;
+use Ascend\Core\Feature\Validation;
 
 class AuthController extends Controller
 {
@@ -29,7 +26,7 @@ class AuthController extends Controller
      */
     public function postRegister(User $user)
     {
-        $cost = BS::getConfig('password_cost');
+        $cost = Bootstrap::getConfig('password_cost');
 
         $validations['email'] = [];
         $validations['email'][] = 'required';
@@ -75,7 +72,7 @@ class AuthController extends Controller
     public function postLogin(User $user, Request $request)
     {
 
-        $cost = BS::getConfig('password_cost');
+        $cost = Bootstrap::getConfig('password_cost');
 
         $validations['email'] = array();
         $validations['email'][] = 'required';
@@ -90,7 +87,7 @@ class AuthController extends Controller
 
 
         if (isset($isValid['success'])) {
-            $user = DB::table('users')
+            $user = Database::table('users')
                 ->where('email', '=', $email)
                 ->first();
             if (password_verify($password, $user['password'])) {

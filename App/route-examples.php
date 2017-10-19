@@ -1,8 +1,7 @@
 <?php namespace Ascend;
 
-// use Ascend\BootStrap as BS;
-use Ascend\Route as Route;
-use Ascend\Feature\Session;
+use Ascend\Core\Route;
+use Ascend\Core\Feature\Session;
 
 ///////////////////////////////////////////////////////////////////////////////////////
 

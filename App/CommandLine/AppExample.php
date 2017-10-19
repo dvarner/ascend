@@ -1,7 +1,7 @@
 <?php namespace App\CommandLine;
 
-use Ascend\CommandLine\_CommandLineAbstract;
-use Ascend\CommandLineArguments;
+use Ascend\Core\CommandLine\_CommandLineAbstract;
+use Ascend\Core\CommandLineArguments;
 
 class AppExample extends _CommandLineAbstract
 {

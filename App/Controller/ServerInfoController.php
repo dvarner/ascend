@@ -1,6 +1,6 @@
 <?php namespace App\Controller;
 
-use Ascend\Route;
+use Ascend\Core\Route;
 
 class ServerInfoController extends Controller {
 

@@ -1,10 +1,9 @@
 <?php namespace App\Controller;
 
 use App\Controller\Controller;
-use Ascend\Bootstrap as BS;
-use Ascend\Feature\Session;
-use Ascend\Request;
-use Ascend\Database as DB;
+use Ascend\Core\Feature\Session;
+use Ascend\Core\Request;
+use Ascend\Core\Database;
 use App\Model\RolePermission;
 use App\Model\Permission;
 
@@ -25,7 +24,7 @@ class PermissionController extends Controller
           JOIN " . RolePermission::getTableName() . " rp ON rp.permission_id = p.id
           JOIN roles r ON r.id = rp.role_id
           ";
-        $db = BS::getDBPDO();
+        $db = Bootstrap::getDBPDO();
         $db->query($sql);
         $row = $db->resultset();
         return $row;
@@ -37,7 +36,7 @@ class PermissionController extends Controller
         foreach($data AS $id => $fields) {
             $table = RolePermission::getTableName();
             $where = ['id' => $id];
-            DB::table($table)->update($table, $fields, $where);
+            Database::table($table)->update($table, $fields, $where);
         }
         return ['success' => 'Awesome make this actual do this'];
     }

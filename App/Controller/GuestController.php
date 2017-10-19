@@ -1,8 +1,7 @@
 <?php namespace App\Controller;
 
-use App\Model\MapUniverse;
-use Ascend\Request;
-use Ascend\Route;
+use Ascend\Core\Request;
+use Ascend\Core\Route;
 
 class GuestController extends Controller {
 
