@@ -1,3 +1,4 @@
 .idea/
+composer.lock
 App/config.php
 vendor/
