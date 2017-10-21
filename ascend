@@ -1,5 +1,5 @@
 #!/usr/bin/env php
-<?php namespace Ascend;
+<?php namespace Ascend\Core;
 
 class CommandLineArguments {
 	
