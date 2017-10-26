@@ -7,11 +7,8 @@ Go to AcendPHP.com for more information.
 # Install
 
 composer create-project --prefer-dist dvarner/ascendphp . --stability dev
-composer install
-
 cp App/config.sample.php App/config.php
-# Add database config data
-
+# In config.php turn on debug = true to see 500 errors
 php ascend db:migrate
 php ascend permission:manage
 php ascend user:create 1 admin [pass] email@email
@@ -26,10 +23,11 @@ php ascend user:create 1 admin [pass] email@email
 #################################################################################
 # FAQ
 
-Q: Getting a 500 error after running compuser create?
-A1: Do composer install.
-A2: Next make sure to copy config.sample.php to config.php
-A3: Make sure to have correct database credentials
+Q: Getting a 500 error after running composer create?
+A1: Go to App/config.php and change debug = true to see errors.
+A2: Do composer install.
+A3: Next make sure to copy config.sample.php to config.php
+A4: Make sure to have correct database credentials
 
 Q: Ascend\[name] does not exist?
 A: As of 10/18/1017 the namespace was updated to Ascend\Core\[name]
