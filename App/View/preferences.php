@@ -58,4 +58,4 @@ ob_end_clean();
 
 // *** Display Template *** //
 // require_once __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR .'_template.php';
-require_once __DIR__ . DIRECTORY_SEPARATOR . '_template.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR;

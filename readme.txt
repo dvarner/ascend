@@ -7,6 +7,8 @@ Go to AcendPHP.com for more information.
 # Install
 
 composer create-project --prefer-dist dvarner/ascendphp . --stability dev
+chmod -R 777 storage/
+chmod 755 storage/
 cp App/config.sample.php App/config.php
 # In config.php turn on debug = true to see 500 errors
 php ascend db:migrate

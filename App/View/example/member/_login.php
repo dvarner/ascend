@@ -18,7 +18,7 @@
             <div class="col-md-4 col-md-offset-4">
                 <div class="login-panel panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Please Sign In</h3>
+                        <h3 class="panel-title">Sign In</h3>
                     </div>
                     <div class="panel-body">
                         <div id="alert-success" class="alert alert-success" role="alert"></div>
@@ -41,7 +41,8 @@
                             </fieldset>
                         </form>
                         <br />
-                        <p><a href="/forgot">Forgot Password</a></p>
+                        <p><a href="register">Register</a></p>
+                        <p><a href="forgot">Forgot Password</a></p>
                     </div>
                 </div>
             </div>
@@ -80,7 +81,7 @@ $(function() {
                 $('#alert-error').hide();
 
                 setTimeout(function () {
-                    window.location.href = '/dashboard';
+                    window.location.href = '/examples/member/area';
                 }, 1000); // 3 seconds
             }
             if (d.error) {

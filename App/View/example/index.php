@@ -2,7 +2,7 @@
 
 // Used ob instead of HEREDOC because code highlighting can occur and no issues with single/double quotes
 
-$title = 'Index';
+$title = 'Ascend PHP - Home';
 
 // *** Content *** //
 ob_start();
@@ -10,6 +10,8 @@ ob_start();
     <div class="row">
         <p class="text-center" style="font-size: 36px; padding-top: 100px;">Ascend PHP</p>
         <p class="text-center">Welcome to the Framework!</p>
+        <p class="text-center"><a href="/docs/index">Documents</a></p>
+        <p class="text-center"><a href="examples/index">Examples</a></p>
     </div>
 <?php
 $container = ob_get_contents();

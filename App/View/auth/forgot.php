@@ -25,4 +25,4 @@ $(function(){
 $javascript = ob_get_contents();
 ob_end_clean();
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR .'_template.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR;

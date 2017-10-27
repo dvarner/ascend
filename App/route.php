@@ -6,14 +6,24 @@ Route::get('/access-denied', function() {
 });
 
 // *** Guest *** //
-Route::get('/', 'GuestController@viewIndex');
+Route::get('/', 'ExampleController@viewIndex');
+Route::get('/docs/index', 'ExampleController@viewDocuments');
+Route::get('/examples/index', 'ExampleController@viewExamples');
+
+Route::get('/examples/member/login', 'ExampleController@viewExampleLogin');
+Route::post('/api/auth/login', 'AuthController@postLogin');
+Route::get('/examples/member/area', 'ExampleController@viewExampleMemberArea');
+
+// Route::get('/examples/member/register', 'ExampleController@viewExampleRegister');
+
+
+
 
 
 // *** Auth *** //
 /*
 Route::get('/', 'AuthController@viewLogin');
 Route::get('/login', 'AuthController@viewLogin');
-Route::post('/api/auth/login', 'AuthController@postLogin');
 
 Route::get('/forgot', 'AuthController@viewPasswordReset');
 Route::post('/api/auth/forgot', 'AuthController@postPasswordReset');
