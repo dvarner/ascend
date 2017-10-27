@@ -4,6 +4,9 @@
 // use Ascend\Request;
 use App\Controller\Controller;
 use App\Model\User;
+use Ascend\Core\BootStrap;
+use Ascend\Core\Database;
+use Ascend\Core\Database;
 use Ascend\Core\Request;
 use Ascend\Core\Route;
 use Ascend\Core\Feature\Session;

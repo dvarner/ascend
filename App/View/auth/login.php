@@ -23,11 +23,40 @@ $container = ob_get_contents();
 ob_end_clean();
 ob_start();
 ?>
-$(function(){
+$(function() {
+    $('#alert-success').hide();
+    $('#alert-error').hide();
+    $('form').on('submit', function (e) {
+        var t = $(this);
+        e.preventDefault();
+        var ser = $(this).serialize();
+        $.post(t.attr('action'), ser, function (d) {
+            htm = '';
+            if (d.success) {
+                htm += 'Login successful! Redirect in 1 seconds!';
+                $('#alert-success').html(htm);
 
+                $('#alert-success').show();
+                $('#alert-error').hide();
+
+                setTimeout(function () {
+                    window.location.href = '/dashboard';
+                }, 1000); // 3 seconds
+            }
+            if (d.error) {
+                $.each(d.error, function (i, v) {
+                    htm += v + '<br />';
+                });
+                $('#alert-error').html(htm);
+
+                $('#alert-success').hide();
+                $('#alert-error').show();
+            }
+        }, 'json');
+    });
 });
 <?php
 $javascript = ob_get_contents();
 ob_end_clean();
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR .'_template.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR;
