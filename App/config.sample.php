@@ -20,7 +20,7 @@ $_config = [
     // * Add require configurations to array in Bootstrap::existConfig()
     'debug' => false, // False = debug mode off, true = basic mode on, Make array for additional validiaton
     'dev' => false, // Is site in development mode; if not set then false
-    'https' => false, // URL secure or not
+    'https' => true, // URL secure or not
     'lock' => false, // Turns on HTTP authentication headers; mostly for locking a site but allowing only specific access
     'maint' => false, // Is in maintenance mode
     'domain' => 'localhost',

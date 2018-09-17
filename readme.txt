@@ -6,7 +6,11 @@ Go to AcendPHP.com for more information.
 #################################################################################
 # Install
 
+## PHP Enabled allow_url_fopen
 composer create-project --prefer-dist dvarner/ascendphp . --stability dev
+## PHP Disabled (Shared hosting mostly)
+php -d allow_url_fopen=on ../composer.phar create -project --prefer-dist dvarner/ascendphp . --stability dev
+## Continue
 chmod -R 777 storage/
 chmod 755 storage/
 cp App/config.sample.php App/config.php
