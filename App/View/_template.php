@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/cosmo/bootstrap.min.css">
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <title><?=isset($title) ? $title: 'AscendPHP'; ?></title>
+    <title><?= $title ?? 'AscendPHP'; ?></title>
     <style>
         .cookiealert {
             position: fixed;
@@ -36,6 +36,7 @@
             margin-left: 10px;
             vertical-align: baseline;
         }
+        .doc-header { font-size: 18px; font-weight: bold; }
     </style>
 </head>
 <body class="text-center">
@@ -43,10 +44,10 @@
 <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
     <header class="masthead mb-auto">
         <div class="inner">
-            <h3 class="masthead-brand">Cover</h3>
+            <h3 class="masthead-brand">AscendPHP</h3>
             <nav class="nav nav-masthead justify-content-center">
-                <a class="nav-link active" href="#">Home</a>
-                <a class="nav-link" href="#">Documents</a>
+                <?php /*<a class="nav-link active" href="#">Home</a>
+                <a class="nav-link" href="#">Documents</a>*/ ?>
             </nav>
         </div>
     </header>
