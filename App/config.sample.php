@@ -1,73 +1,64 @@
 <?php
 
-define('PATH_PROJECT',   		__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR);
-define('PATH_FRAMEWORK',    	PATH_PROJECT);
-define('PATH_APP',          	PATH_PROJECT . 'App' . DIRECTORY_SEPARATOR);
-define('PATH_FEATURE',      	PATH_FRAMEWORK . 'Feature' . DIRECTORY_SEPARATOR);
-define('PATH_STORAGE',      	PATH_PROJECT . 'storage' . DIRECTORY_SEPARATOR);
-define('PATH_VENDORS',      	PATH_PROJECT . 'vendors' . DIRECTORY_SEPARATOR);
-define('PATH_COMMANDLINE',  	PATH_FRAMEWORK . 'CommandLine' . DIRECTORY_SEPARATOR);
-define('PATH_CONTROLLERS',  	PATH_APP . 'Controller' . DIRECTORY_SEPARATOR);
-define('PATH_MODELS',     		PATH_APP . 'Model' . DIRECTORY_SEPARATOR);
-define('PATH_VIEWS',      		PATH_APP . 'View' . DIRECTORY_SEPARATOR);
-define('PATH_APP_COMMANDLINE',  PATH_APP . 'CommandLine' . DIRECTORY_SEPARATOR);
+/*
+ * ##############################
+ * ## Setup ##
+ * ##############################
+ *
+ * Change out config.php db user connections and domain. leave all PATH's alone unless you know what your doing.
+ *
+ * Run the following commands
+mkdir storage
+mkdir storage/log
+chmod -R 777 storage/
+chmod 755 storage/
+ *
+ * Setup Cron
+php /path-to-root-of-ascendphp-framework/bootstrap_cron.php > /dev/null 2>&1
+ */
 
-define('RET', PHP_EOL);
-define('TAB', "\t");
+ini_set('session.save_path','/tmp'); // on cpanel /home/[user]/tmp
 
-$_config = [
-    // *** Required Configurations *** //
-    // * Add require configurations to array in Bootstrap::existConfig()
-    'debug' => false, // False = debug mode off, true = basic mode on, Make array for additional validiaton
-    'dev' => false, // Is site in development mode; if not set then false
-    'https' => true, // URL secure or not
-    'lock' => false, // Turns on HTTP authentication headers; mostly for locking a site but allowing only specific access
-    'maint' => false, // Is in maintenance mode
-    'domain' => 'localhost',
-    'domain_api' => 'api.localhost',
-    'domain_poll' => 'poll.localhost',
-    'timezone' => 'UTC', // America/New_York',
-    // *** Optional Configurations *** //
-    'password_cost' => 10,
-    'db' => [
-        'local' => [
-            'name' => 'local',
-            'type' => 'mysql',
-            'hostname' => 'localhost',
-            'database' => '',
-            'username' => '',
-            'password' => '',
-        ]
-    ],
-    'role' => [
-        'default' => 4,
-    ],
+define('TAB',"\t");
+define('RET',"\r\n");
+define('DS', DIRECTORY_SEPARATOR);
 
-	// 'set_time_out' => 60,
+define('PATH_PROJECT',          __DIR__ . DS . '..' . DS);
+define('PATH_APP',              PATH_PROJECT . 'App' . DS);
+define('PATH_COMMANDLINE',      PATH_APP . 'CommandLine' . DS);
+define('PATH_CONTROLLERS',      PATH_APP . 'Controller' . DS);
+define('PATH_MODELS',           PATH_APP . 'Model' . DS);
+define('PATH_VIEWS',            PATH_APP . 'View' . DS);
+define('PATH_FRAMEWORK',        PATH_PROJECT . 'Framework' . DS);
+define('PATH_STORAGE',          PATH_PROJECT . 'storage' . DS);
+define('PATH_VENDORS',     	    PATH_PROJECT . 'vendor' . DS);
+define('PATH_IMAGES',      	    PATH_STORAGE . 'images' . DS);
+define('PATH_LOG',              PATH_STORAGE . 'log' . DS);
+define('PATH_PUBLIC',      	    PATH_PROJECT . 'public' . DS);
+define('PATH_ASSETS',      	    PATH_PUBLIC . 'assets' . DS);
 
-    /*
-	// * Only Need if debug is not false and is array * //
-    'debug' => array(
-        'validation' => false, // Outputs debugging when doing validation into results
-        'script_runtime' => false, // Outputs at end how long code took
-    )
-     */
+define('ENV', 'dev'); // stage, prod
+define('DEBUG', true);
+define('FORCE_HTTPS', true);
+define('TIMEZONE_DEFAULT', 'UTC');
+// define('IS_COMMANDLINE', true); // this is in bootstrap
+define('SCRIPT_TIMEOUT', 60);
+define('PASSWORD_COST', 11);
+define('DOMAIN','example.com');
+define('DEFAULT_EMAIL','');
 
-	// * Only need if lock = true */
-	/*
-    'lock_user' => '',
-    'lock_pass' => '',
-	*/
+// Assumes MySQL; currently no other option
+define('DB_HOST','localhost');
+define('DB_NAME','');
+define('DB_USER','');
+define('DB_PASS', '');
+define('DB_LOG_QUERIES', true);
 
-	/* Currently not used or working
-    'password_cost' => 11,
-    'upload' => array(
-        'path' => PATH_STORAGE,
-        'max' => 1024*1024*10,
-        'types' => array(),
-    ),
-    'robotstxt' => array(
-        'access' => false
-    ),
-	*/
-];
+/*
+define('STRIPE_PUBLISH_KEY','');
+define('STRIPE_SECRET_KEY','');
+
+define('TWILIO_SID','');
+define('TWILIO_TOKEN','');
+define('TWILIO_PHONE','');
+*/
