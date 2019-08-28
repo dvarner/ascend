@@ -11,8 +11,7 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=7.0.0",
-        "nesbot/carbon": "^1.21",
-        "filp/whoops": "1.*",
+        "nesbot/carbon": "^2.23.0",
         "dvarner/ascendphp-core": "dev-master"
     }
 }
