@@ -1,7 +1,9 @@
 #################################################################################
 # Website
 
-Go to AcendPHP.com for more information.
+Go to AscendPHP.com for more information.
+
+EVERYTHING BELOW HERE IS ABOUT TO CHANGE WITH THE NEW UPDATED VERSION WHICH DOES NOT MIMIC LARAVEL 100%.
 
 #################################################################################
 # Install
@@ -22,7 +24,7 @@ php ascend user:create 1 admin [pass] email@email
 #################################################################################
 # Supports
 
-* PHP 5.4+
+* PHP 7.0
 * PHP PDO Extension
 * MySQL
 
