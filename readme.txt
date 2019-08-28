@@ -15,9 +15,10 @@ chmod -R 777 storage/
 chmod 755 storage/
 cp App/config.sample.php App/config.php
 # In config.php turn on debug = true to see 500 errors
-php ascend db:migrate
-php ascend permission:manage
-php ascend user:create 1 admin [pass] email@email
+php ascend sql:migrate
+## currently not a thing in the new version
+#php ascend permission:manage
+#php ascend user:create 1 admin [pass] email@email.com
 
 #################################################################################
 # Supports
