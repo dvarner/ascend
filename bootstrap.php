@@ -1,16 +1,36 @@
 <?php namespace Ascend;
 
-require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'App' . DIRECTORY_SEPARATOR . 'config.php';
 
-use Ascend\Core\BootStrap;
-use Ascend\Core\Route;
+require_once 'vendor/autoload.php';
 
-Bootstrap::init();
+use Ascend\Core\Session;
+use Ascend\Core\CommandLine;
 
-Route::maint();
-Route::lock();
-Route::denied(); // uri = /access-denied
+if (DEBUG) {
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+}
 
-require_once __DIR__ . '/App/route.php';
+if (PHP_SAPI == 'cli') {
+    define('IS_COMMANDLINE', true);
+    set_time_limit(0);
+} else {
+    set_time_limit(SCRIPT_TIMEOUT);
+    define('IS_COMMANDLINE', false);
+}
 
-Route::error404();
+if (FORCE_HTTPS && IS_COMMANDLINE === false) {
+    if (empty($_SERVER['HTTPS'])) {
+        header('Location: https://' . DOMAIN);
+        exit;
+    }
+}
+
+if (!IS_COMMANDLINE) {
+    Session::start();
+    require_once PATH_APP . 'routes.php';
+} else {
+    CommandLine::init();
+}

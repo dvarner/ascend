@@ -3,8 +3,6 @@
 
 Go to AscendPHP.com for more information.
 
-EVERYTHING BELOW HERE IS ABOUT TO CHANGE WITH THE NEW UPDATED VERSION WHICH DOES NOT MIMIC LARAVEL 100%.
-
 #################################################################################
 # Install
 
@@ -24,7 +22,7 @@ php ascend user:create 1 admin [pass] email@email
 #################################################################################
 # Supports
 
-* PHP 7.0
+* PHP 5.6
 * PHP PDO Extension
 * MySQL
 
@@ -32,10 +30,14 @@ php ascend user:create 1 admin [pass] email@email
 # FAQ
 
 Q: Getting a 500 error after running composer create?
-A1: Go to App/config.php and change debug = true to see errors.
-A2: Do composer install.
-A3: Next make sure to copy config.sample.php to config.php
+A1: Do composer install.
+A2: Make sure permissions have properly been set on /storage/ folder
+A3: Next make sure to copy config.sample.php to config.php and filled out the variables
 A4: Make sure to have correct database credentials
+
+#################################################################################
+## EVERYTHING BELOW HERE MIGHT HAVE CHANGED...
+#################################################################################
 
 Q: Ascend\[name] does not exist?
 A: As of 10/18/1017 the namespace was updated to Ascend\Core\[name]

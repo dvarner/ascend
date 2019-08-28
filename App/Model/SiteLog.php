@@ -1,7 +1,7 @@
 <?php namespace App\Model;
 
-use Ascend\Core\Model;
-use Ascend\Core\Session;
+use Framework\Model;
+use Framework\Session;
 
 class SiteLog extends Model
 {
