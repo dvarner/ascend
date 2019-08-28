@@ -1,7 +1,7 @@
 <?php namespace App\Model;
 
-use Framework\Model;
-use Framework\Session;
+use Ascend\Core\Model;
+use Ascend\Core\Session;
 
 class User extends Model
 {

@@ -54,11 +54,3 @@ define('DB_USER','');
 define('DB_PASS', '');
 define('DB_LOG_QUERIES', true);
 
-/*
-define('STRIPE_PUBLISH_KEY','');
-define('STRIPE_SECRET_KEY','');
-
-define('TWILIO_SID','');
-define('TWILIO_TOKEN','');
-define('TWILIO_PHONE','');
-*/
