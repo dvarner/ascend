@@ -1,11 +1,20 @@
 <?php namespace Ascend;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'App' . DIRECTORY_SEPARATOR . 'config.php';
-
+require_once 'vendor/dvarner/ascendphp-core/src/Ascend/Core/_functions.php';
 require_once 'vendor/autoload.php';
 
 use Ascend\Core\Session;
 use Ascend\Core\CommandLine;
+
+spl_autoload_register(function ($className)
+{
+    $getFilePath = str_replace('\\','/',$className);
+    $requirePath = PATH_PROJECT . $getFilePath . '.php';
+    if (file_exists($requirePath)) {
+        require_once $requirePath;
+    }
+});
 
 if (DEBUG) {
     ini_set('display_errors', 1);

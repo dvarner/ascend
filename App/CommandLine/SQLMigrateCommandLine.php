@@ -1,7 +1,8 @@
 <?php namespace App\CommandLine;
 
 use App\Model\Migration;
-use Framework\CommandLineWrapper;
+use Ascend\Core\CommandLineWrapper;
+use Ascend\Core\Database;
 
 class SQLMigrateCommandLine extends CommandLineWrapper
 {
@@ -30,10 +31,10 @@ class SQLMigrateCommandLine extends CommandLineWrapper
             // Run Migrations table first; is required for all other models
             $model = 'Migration';
             $table = call_user_func('\\App\\Model\\' . $model . '::getTableName');
-            if (!\Framework\Database::table_exists($table)) {
+            if (!Database::table_exists($table)) {
                 self::createAndSeedModel($model);
             }
-            self::$next_batch_id = \App\Model\Migration::getNextBatchId();
+            self::$next_batch_id = Migration::getNextBatchId();
 
             if ($dh = opendir($dir)) {
                 while (($file = readdir($dh)) !== false) {
@@ -41,7 +42,7 @@ class SQLMigrateCommandLine extends CommandLineWrapper
                         list($model, $ext) = explode('.', $file);
                         if ($ext == 'php' && $model != 'Migration') {
                             $table = call_user_func('\\App\\Model\\' . $model . '::getTableName');
-                            if (!\Framework\Database::table_exists($table)) {
+                            if (!Database::table_exists($table)) {
                                 self::createAndSeedModel($model);
                             } else {
                                 self::alterModel($model);
@@ -157,7 +158,7 @@ class SQLMigrateCommandLine extends CommandLineWrapper
                 foreach ($fields_remove AS $rk => $rv) {
                     $sql = 'ALTER TABLE ' . $table_name . ' DROP COLUMN ' . $rk;
                     self::out($sql);
-                    \Framework\Database::query($sql);
+                    Database::query($sql);
                     // self::saveMigrationRow($batch_id, $model, $structure_current);
                     unset($rk, $rv);
                 }
@@ -181,7 +182,7 @@ class SQLMigrateCommandLine extends CommandLineWrapper
                     // Add field
                     $sql = 'ALTER TABLE ' . $table_name . ' ADD ' . $k . ' ' . $v . ' AFTER ' . $previous_field;
                     self::out($sql);
-                    \Framework\Database::query($sql);
+                    Database::query($sql);
                     // self::saveMigrationRow($batch_id, $model, $structure_current);
                     unset($k, $v);
                 }
@@ -191,7 +192,7 @@ class SQLMigrateCommandLine extends CommandLineWrapper
                     // Change field
                     $sql = 'ALTER TABLE ' . $table_name . ' MODIFY COLUMN ' . $k . ' ' . $v;
                     self::out($sql);
-                    \Framework\Database::query($sql);
+                    Database::query($sql);
                     // self::saveMigrationRow($batch_id, $model, $structure_current);
                 }
             }
