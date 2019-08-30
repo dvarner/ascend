@@ -6,7 +6,16 @@ Go to AscendPHP.com for more information.
 #################################################################################
 # Install
 
-## PHP Enabled allow_url_fopen
+### PHP Enabled allow_url_fopen ###
+
+## Option (1) ##
+chmod +x setup.sh
+# and run
+./setup.sh
+
+## -- OR -- ##
+
+## Option (2) Manual ##
 composer create-project --prefer-dist dvarner/ascendphp . --stability dev
 ## PHP Disabled (Shared hosting mostly)
 php -d allow_url_fopen=on ../composer.phar create -project --prefer-dist dvarner/ascendphp . --stability dev
@@ -15,8 +24,8 @@ chmod -R 777 storage/
 chmod 755 storage/
 cp App/config.sample.php App/config.php
 # In config.php turn on debug = true to see 500 errors
-php ascend sql:migrate
-## currently not a thing in the new version
+#php ascend sql:migrate
+## currently not a thing in the new version; but reimplemented later
 #php ascend permission:manage
 #php ascend user:create 1 admin [pass] email@email.com
 
