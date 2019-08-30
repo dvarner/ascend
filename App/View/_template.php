@@ -3,9 +3,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/cosmo/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/darkly/bootstrap.min.css">
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <title><?= $title ?? 'AscendPHP'; ?></title>
+    <title><?= isset($title) ? $title : 'AscendPHP'; ?></title>
     <style>
         .cookiealert {
             position: fixed;
@@ -37,6 +37,35 @@
             vertical-align: baseline;
         }
         .doc-header { font-size: 18px; font-weight: bold; }
+        code {
+            display: block;
+            white-space: pre;
+            background: #000;
+            padding: 5px;
+            border: 1px solid #444;
+            counter-reset: line;
+        }
+        code span {
+            display: block;
+        //line-height: 1.5rem;
+        }
+        code span:before {
+            counter-increment: line;
+            content: counter(line);
+            display: inline-block;
+            border-right: 1px solid #ddd;
+            width: 30px;
+            padding-right: 5px;
+            margin-right: 5px;
+            text-align: right;
+            color: #888
+        }
+        .card-body h4 {
+            padding-top: 60px;
+        }
+        .card-body h5 {
+            padding-top: 40px;
+        }
     </style>
 </head>
 <body class="text-center">
@@ -53,7 +82,7 @@
     </header>
 
     <main role="main" class="inner cover">
-        <?= $container ?? ''; ?>
+        <?= isset($container) ? $container : ''; ?>
     </main>
 
     <footer class="mastfoot mt-auto">
@@ -87,7 +116,7 @@ if (isset($scripts) && is_array($scripts)) {
 }
 ?>
 <script>
-    <?= $javascript ?? ''; ?>
+    <?= isset($javascript) ? $javascript : ''; ?>
 </script>
 </body>
 </html>
