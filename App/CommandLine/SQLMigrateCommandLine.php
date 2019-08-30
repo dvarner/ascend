@@ -199,9 +199,4 @@ class SQLMigrateCommandLine extends CommandLineWrapper
             self::saveMigrationRow($batch_id, $model, $structure_new);
         }
     }
-
-    private static function out($msg = '')
-    {
-        echo $msg . PHP_EOL;
-    }
 }
