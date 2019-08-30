@@ -6,16 +6,7 @@ Go to AscendPHP.com for more information.
 #################################################################################
 # Install
 
-### PHP Enabled allow_url_fopen ###
-
-## Option (1) ##
-chmod +x setup.sh
-# and run
-./setup.sh
-
-## -- OR -- ##
-
-## Option (2) Manual ##
+## PHP Enabled allow_url_fopen
 composer create-project --prefer-dist dvarner/ascendphp . --stability dev
 ## PHP Disabled (Shared hosting mostly)
 php -d allow_url_fopen=on ../composer.phar create -project --prefer-dist dvarner/ascendphp . --stability dev
