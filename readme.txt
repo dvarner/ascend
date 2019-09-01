@@ -23,7 +23,7 @@ cp App/config.sample.php App/config.php
 #################################################################################
 # Supports
 
-* PHP 5.6
+* PHP 5.6 (Eventually 7.0+)
 * PHP PDO Extension
 * MySQL
 
@@ -37,25 +37,5 @@ A3: Next make sure to copy config.sample.php to config.php and filled out the va
 A4: Make sure to have correct database credentials
 
 #################################################################################
-## EVERYTHING BELOW HERE MIGHT HAVE CHANGED...
-#################################################################################
-
-Q: Ascend\[name] does not exist?
-A: As of 10/18/1017 the namespace was updated to Ascend\Core\[name]
-Add Core into name space to fix the issue.
-
-Q: BS:: or DB:: does not exist?
-A Convert BS:: to Bootstrap:: and DB:: to Database.
-Felt the shorthands were a bit much.
-
-# Notes #
-* Trait; available as of 5.4+
-* json_encode($data, JSON_PRETTY_PRINT); // 5.4+
-* Bootstrap::getConfig('name.subname'); // <-- each . goes into a deeper level of array
-* $db = Bootstrap::getDB();
-
-#################################################################################
-# Benchmark
-
-* ab (apache benchmark)
-* phpmatrics
+# Setup a Cron (currently not implemented)
+php /path-to-root-of-ascendphp-framework/bootstrap_cron.php > /dev/null 2>&1
